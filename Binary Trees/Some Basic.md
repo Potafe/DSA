@@ -9,17 +9,17 @@
 ________________________________
 
 #### Traversals:
-    1. PRE  | => Ro, L, R
-    2. POST | => L, R, Ro
-    3. IN   | => L, Ro, R
-    4. BFS/LEVEL ORDER => Queue 
+1. PRE => Ro, L, R
+2. POST => L, R, Ro
+3. IN => L, Ro, R
+4. BFS/LEVEL ORDER => Queue 
 
 
 ##### Pseudocodes:
 
 * PRE PSEUDOCODE:
     * RECURSIVE WAY:
-    ```
+    ```cpp
         void preorder(root) {
             if root == null return 0;
             print root->val;
@@ -34,7 +34,7 @@ ________________________________
 ________________________________
 * POST PSEUDOCODE:
     * RECURSIVE WAY:
-    ```
+    ```cpp
         void postorder(root) {
             if root == null return 0;
             postorder(root->left);
@@ -54,7 +54,7 @@ ________________________________
 
 * INORDER PSEUDOCODE:
     * RECURSIVE WAY:
-    ```
+    ```cpp
         void inorder(root) {
             if root == null return 0;
             inorder(root->left);
@@ -69,23 +69,30 @@ ________________________________
 ________________________________
 * LEVEL ORDER PSEUDOCODE:
     * BFS:
-    ```
+    ```cpp
     //USE A QUEUE
 
     void bfs(root) {
-        
-        vector<int>vec;
+    
         queue<root> q;
-        q.add(root)'
+        q.add(root);
+        vector<vector<int>> ans;
+
 
         while(!q.empty()) {
-            front_node = q.front();
-            q.pop();
+            int size = q.size();
+            vector<int>level;
+            
+            for (int i = 0; i < size; i++) {
+                front_node = q.front();
+                q.pop();
 
-            if (front_node->left != null) q.add(front_node->left)
-            if (front_node->right != null) q.add(front_node->right) 
+                if (front_node->left != null) q.add(front_node->left)
+                if (front_node->right != null) q.add(front_node->right) 
 
-            vec.push(front_node -> val);
+                level.push(front_node -> val);
+            }
+            ans.push(level)   
         }
     }
     ```
