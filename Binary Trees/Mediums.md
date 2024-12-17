@@ -22,7 +22,7 @@
 
 11. [Symmetric Binary Tree](#ans-11)
 
-12. Right & Left View
+12. [Right & Left View](#ans-12)
 
 
 ## Solutions:
@@ -354,6 +354,8 @@ ________________________________
         return sym(root->left, root->right);    
     }
 ```
+________________________________
+
 #### Ans 12.
     Solution 1: Do BFS and add the back values from the BFS vector
 
@@ -403,7 +405,8 @@ ________________________________
         return res;    
     }
 ```
-    
+________________________________
+   
 
 
 
