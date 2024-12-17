@@ -14,13 +14,15 @@
 
 7. [Vertical Order Traversal](#ans-7-vertical-order-traversal)
 
-8. Top View of Binary Tree
+8. [Top View of Binary Tree](#ans-8)
 
-9. Bottom View of Binary Tree
+9. [Bottom View of Binary Tree](#ans-9)
 	
-10. Boundary Traversal of Binary Tree
+10. [Boundary Traversal of Binary Tree](#ans-10)
 
-11. Symmetric Binary Tree
+11. [Symmetric Binary Tree](#ans-11)
+
+12. Right & Left View
 
 
 ## Solutions:
@@ -171,6 +173,172 @@ ________________________________
 /// WILL WRITE TOMORROW TO CHECK MEMORY;
 ```
 ________________________________
+#### Ans 8.
+    Idea is simple store the level and the node in a map, since its top view, dont update the node value in map if another node of same val is found
+```cpp
+    vector<int> topView(root) {
+        if (root == NULL) return {};
+        
+        queue<pair<NODE, int>> q;
+        vector<int> ans;
+        map<int, int> mp;
+        
+        q.push({root, 0});
+        
+        while(!q.empty()) {
+            int size = q.size();
+            
+            for (int i = 0; i < size; i++) {
+                auto p = q.front();
+                q.pop();
+                
+                node = p.first;
+                int level = p.second;
+                
+                if (node->left) q.push({node->left, level - 1});
+                if (node->right) q.push({node->right, level + 1});
+                
+                if(mp.find(level) == mp.end()) {
+                    mp.insert({level, node->data});
+                }
+            }
+        }
+        
+        
+        for (const auto& pair : mp) {
+            ans.push_back(pair.second);
+        }
+        
+        return ans;
+    }
+```
+_______________________________
+#### Ans 9.
+    This time just update the value of the node upon reaching a level visited before.
+```cpp
+    vector <int> bottomView(root) {
+        // code here
+        if (root == NULL) return {};
+        
+        queue<pair<NODE, int>> q;
+        vector<int> ans;
+        map<int, int> mp;
+        
+        q.push({root, 0});
+        
+        while(!q.empty()) {
+            int size = q.size();
+            
+            for (int i = 0; i < size; i++) {
+                auto p = q.front();
+                q.pop();
+                
+                Node* node = p.first;
+                int level = p.second;
+                
+                if (node->left) q.push({node->left, level - 1});
+                if (node->right) q.push({node->right, level + 1});
+                
+                mp[level] = node->data;
+            }
+        }
+        
+        
+        for (const auto& pair : mp) {
+            ans.push_back(pair.second);
+        }
+        
+        return ans;
+    }
+```
+________________________________
+
+#### Ans 10.
+    first do left traversal -> 
+            Move to the left child if it exists,
+            Otherwise move to the right child
+    
+    then do leaf traversals ->
+        do inorder traversal of leafes and their roots
+    
+    then do right traversals -> 
+            Move to the right child if it exists,
+            Otherwise move to the left child
+```cpp
+
+    bool tell(*root) {
+        return (root->left == NULL && root->right == NULL);    
+    }
+    
+    void left(*root, vector<int> &ans) {
+        Node* curr = root->left;
+        
+        while(curr) {
+            
+            if (!tell(curr)) ans.push_back(curr->data);
+            
+            if (curr->left) curr = curr->left;
+            else curr = curr->right; 
+        }
+    }
+        
+    void leaf(*root, vector<int> &ans) {
+        if (tell(root)) {
+            // cout << " child: " << root->data;
+            ans.push_back(root->data);
+            return;
+        }
+        
+        else {
+            // cout << " root: " << root->data ; 
+            if (root->left) leaf(root->left, ans);
+            if (root->right) leaf(root->right, ans);
+        }
+        // right(root->right, ans);
+        // cout << root->right->data <<  " ";
+    }
+    
+    void right(*root, vector<int> &ans) {
+        Node* curr = root->right;
+        vector<int> temp;
+         
+        while (curr) {
+            // If the current node is not a leaf,
+            // add its value to a temporary vector
+            if (!tell(curr)) {
+                temp.push_back(curr->data);
+            }
+            // Move to the right child if it exists,
+            // otherwise move to the left child
+            if (curr->right) {
+                curr = curr->right;
+            } else {
+                curr = curr->left;
+            }
+        }
+        // Reverse and add the values from
+        // the temporary vector to the result
+        for (int i = temp.size() - 1; i >= 0; --i) {
+            ans.push_back(temp[i]);
+        }    
+    }
+    
+    vector<int> boundaryTraversal(*root) {
+        // code here
+        if (root==NULL) return {};
+        
+        vector<int> ans;
+        
+        if(!tell(root)) ans.push_back(root->data);
+        
+        left(root, ans);
+        leaf(root, ans);
+        right(root, ans);
+        return ans;
+    }
+
+```
+________________________________
 #### Ans 11. 
     Check if BT is mirror image, by doing traversal on the root's left and right child
 ```cpp
@@ -186,7 +354,55 @@ ________________________________
         return sym(root->left, root->right);    
     }
 ```
+#### Ans 12.
+    Solution 1: Do BFS and add the back values from the BFS vector
 
+    Solution 2: // WILL CHECK LATER -> RELATED TO RECURSION 
+```cpp
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+
+        if (!root) {
+            return ans;
+        }
+
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (!q.empty()) {
+            int size = q.size();
+            vector<int> level;
+
+            for (int i = 0; i < size; i++) {
+                TreeNode* top = q.front();
+                level.push_back(top->val);
+                q.pop();
+
+                if (top->left != NULL) {
+                    q.push(top->left);
+                }
+
+                if (top->right != NULL) {
+                    q.push(top->right);
+                }
+            }
+            ans.push_back(level);
+        }
+        return ans;
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> res;
+
+        vector<vector<int>> levelTraversal = levelOrder(root);
+
+        for (auto level : levelTraversal) {
+            res.push_back(level.back());
+        }
+
+        return res;    
+    }
+```
     
 
 
