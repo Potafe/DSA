@@ -18,3 +18,69 @@ Traversal
 8. Flatten Binary Tree to LinkedList
 
 ## Solutions: 
+
+#### Ans 1.
+
+    Very Basic and fuck off solution:
+        1. traverse the tree and add nodes to the tree.
+        2. if reach leaf node -> add it to ans vec<vec>
+        3. always pop back the added elements after traversal
+
+```cpp  
+    bool tell(Node* root) {
+        return (root->left == NULL && root->right == NULL);
+    }
+    
+    void traverse(Node* root, vector<vector<int>>& ans, vector<int>& depth) {
+        if (root == NULL) return;
+        
+        if (tell(root)) {
+            depth.push_back(root->data);
+            ans.push_back(depth);
+            depth.pop_back();
+            return;
+        }
+        
+        depth.push_back(root->data);
+        traverse(root->left, ans, depth);
+        traverse(root->right, ans, depth);
+        depth.pop_back();
+    }
+    
+    vector<vector<int>> Paths(Node* root) {
+        vector<int> depth;
+        vector<vector<int>> ans;
+        traverse(root, ans, depth);
+        return ans;
+    }
+```
+________________________________
+#### Ans 2.
+    Clever solution, maine nahi socha tha yeh:
+
+        1. Just return the node you are travelling if the node is either of the destination node, else return null;
+
+        
+```cpp
+    Node* lowestCommonAncestor(Node* root, Node* p, Node* q) {
+        if(root == NULL || root == p || root == q){
+            return root;
+        }
+
+        Node* left = lowestCommonAncestor(root->left, p, q);
+        
+        Node* right = lowestCommonAncestor(root->right, p, q);
+
+        if(left == NULL){
+            return right;
+        }
+
+        else if(right == NULL){
+            return left;
+        }
+        
+        return root;
+    }
+```
+________________________________
+
