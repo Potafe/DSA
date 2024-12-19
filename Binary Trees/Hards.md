@@ -1,8 +1,8 @@
 ## Problems:
 
-1. Root to Node Path in Binary Tree
+1. [Root to Node Path in Binary Tree](#ans-1)
 
-2. LCA in Binary Tree
+2. [LCA in Binary Tree](#ans-2)
 
 3. Maximum width of a Binary Tree
 
