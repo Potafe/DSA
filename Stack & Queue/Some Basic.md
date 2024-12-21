@@ -90,7 +90,44 @@ ________________________________
 ```
 ________________________________
 #### Ans 4.
+    -> Basically use two stacks:
+        1. Push all elements in that are already in stack 1 --> stack 2
+        2. Then push new element to stack 1
+        3. Then empty stack 2 --> stack 1
+```cpp
+    stack<int> stk;
+    stack<int> stk2;
+    
+    void push(int x) {
+        while (stk.size()) {
+            stk2.push(stk.top());
+            stk.pop();
+        }   
 
+        stk.push(x);
+
+        while (stk2.size()) {
+            stk.push(stk2.top());
+            stk2.pop();   
+        }
+    } 
+    
+    int pop() {
+        int front = stk.top();
+        stk.pop();
+
+        return front;
+    }
+    
+    int peek() {
+        return stk.top();
+    }
+    
+    bool empty() {
+        return stk.size() == 0;
+    }
+
+```
 ________________________________
 #### Ans 5.
 
