@@ -139,6 +139,90 @@ ________________________________
 
 ________________________________
 #### Ans 8.
+    Solution 1 -> maintain pair<int, int> stack
+```python
+    class MinStack(object):
+
+    def __init__(self):
+        self.stack = []    
+
+    def push(self, val):
+        """
+        :type val: int
+        :rtype: None
+        """
+        mini = self.getMin()
+        print(mini)
+        if mini == None or mini > val:
+            mini = val
+        
+        self.stack.append([val, mini])
+        
+
+    def pop(self):
+        """
+        :rtype: None
+        """
+        self.stack.pop()
+        
+
+    def top(self):
+        """
+        :rtype: int
+        """
+        return self.stack[-1][0] if self.stack else None
+        
+
+    def getMin(self):
+        """
+        :rtype: int
+        """
+        return self.stack[-1][-1] if self.stack else None
+        
+```
+
+    Solution 2 -> is unintuitve
+```cpp
+    stack<long long> stk;
+    long long min = INT_MIN;
+    
+    MinStack() {
+        
+    }
+    
+    void push(int val) {
+        if (stk.empty()) {
+            stk.push(val);
+            min = val;
+        }    
+
+        else {
+            if(val > min) stk.push(val);
+            else {
+                stk.push((val - min+val));
+                min = val;
+            }
+        }
+    }
+    
+    void pop() {
+        long long x = stk.top();
+        stk.pop();   
+
+        if (min > x) min = 2*min - x; 
+    }
+    
+    int top() {
+        long long x = stk.top();
+        if (x < min) return min;
+        
+        else return x;
+    }
+    
+    int getMin() {
+        return min;
+    }
+```
 
 ________________________________
 

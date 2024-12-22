@@ -6,7 +6,7 @@
 
 3. Maximum width of a Binary Tree
 
-4. Check for Children Sum Property
+4. [Check for Children Sum Property](#ans-4)
 
 5. Print all the Nodes at a distance of K in a Binary Tree
 
@@ -83,4 +83,27 @@ ________________________________
     }
 ```
 ________________________________
-
+#### Ans 4.
+    Recurse over left and right:
+        1. Check and calculate the left and right.
+        2. Return 1 if sum of childs = root->data.
+```cpp
+     int isSumProperty(Node *root) {
+     
+        if (root == NULL || (root->left == NULL && root->right == NULL)) {
+            return 1;
+        }
+        
+        int child = 0;
+        if (root->right) child += root->right->data;
+        if (root->left) child += root->left->data;
+        
+        if (child == root->data) {
+            if (isSumProperty(root->left) == 1 && isSumProperty(root->right) == 1) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+```
+________________________________
