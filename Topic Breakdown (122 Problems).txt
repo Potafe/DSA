@@ -1,0 +1,90 @@
+Topic Breakdown (122 Problems)
+
+Binary Trees:
+	Hards: 9
+	Easys: 5
+	Total: 14
+Graphs:
+	Hards: 42
+
+Stack/Queues:
+	Hards: 24
+
+Dynamic Programming:
+	Hards: 24
+
+Bit Manipulation:
+	Mediums + Hards: 18 (14 done)
+
+Plan
+	Day 1 (Today, Start at 19:00)
+		Goal: Solve 18 problems (mix of Hard, Medium, and Easy).
+		Topics:
+			Binary Trees (3 Hards + 2 Easys)
+			Graphs (5 Hards)
+			Bit Manipulation (3 Mediums) -> 1 done
+
+	Day 2
+		Goal: Solve 20 problems.
+		Topics:
+			Graphs (8 Hards)
+			Stack/Queues (6 Hards)
+			Binary Trees (2 Hards + 1 Easy)
+			Bit Manipulation (3 Mediums)
+
+
+	Day 3
+		Goal: Solve 18 problems.
+		Topics:
+			Dynamic Programming (6 Hards)
+			Graphs (7 Hards)
+			Stack/Queues (5 Hards)
+
+	Day 4
+		Goal: Solve 20 problems.
+		Topics:
+			Dynamic Programming (8 Hards)
+			Graphs (6 Hards)
+			Stack/Queues (6 Hards)
+
+	Day 5
+		Goal: Solve 18 problems.
+		Topics:
+			Dynamic Programming (6 Hards)
+			Graphs (6 Hards)
+			Bit Manipulation (6 Hards)
+
+	Day 6
+		Goal: Solve 16 problems.
+		Topics:
+			Graphs (6 Hards)
+			Stack/Queues (6 Hards)
+			Binary Trees (2 Hards + 2 Easys)
+	
+	Day 7
+		Goal: Solve 12 problems + Review.
+		Topics:
+			Bit Manipulation (6 Mediums/Hards)
+			Binary Trees (1 Hard + 2 Easys)
+			Dynamic Programming (3 Hards)
+
+	
+	Review/Revisit unsolved problems.
+
+Daily Schedule
+Example for 10-hour workday:
+07:00 - 08:30: Block 1 (Problem Solving)
+08:30 - 08:50: Break
+08:50 - 10:20: Block 2 (Problem Solving)
+10:20 - 10:40: Break
+10:40 - 12:10: Block 3 (Problem Solving)
+12:10 - 14:00: Lunch + Relax
+14:00 - 15:30: Block 4 (Problem Solving)
+15:30 - 15:50: Break
+15:50 - 17:20: Block 5 (Problem Solving)
+17:20 - 18:00: Longer Break
+18:00 - 19:30: Block 6 (Problem Solving)
+19:30 - 20:00: Dinner
+20:00 - 21:30: Block 7 (Problem Solving)
+21:30 - 22:00: Relax
+22:00 - 23:00: Review + Plan for Next Day.
