@@ -169,8 +169,79 @@ ________________________________
         
         map<int, map<int, multiset<int>>>
         queue<pair<NODE>, pair<int>>
+
+    So we mantain a 3 nested data structure like this:
+
+	map<int, map<int, multiset<int>>> mp:
+		This looks like this:
+			mp[0][0].insert(3)
+			mp[1][-1].insert(9) 
+			mp[1][1].insert(20)
+			mp[2][0].insert(15)
+			mp[2][1].insert(7) 
+			
+			mp = {
+				0: {
+				 0: {3},
+				 200: {15}
+				},
+				1: {
+				 -1: {9},
+				 1: {20}
+				},
+				2: {
+				 0: {15},
+				 2: {7}
+				}
+			}
+    
+    Now we insert into this map:
+        mp[row][col].insert(node->val)
+        
+    And we traverse the tree using a queue:
+        q.push({node->left, {row + 1, col - 1}})
+        q.push({node->left, {row + 1, col + 1}})
+
+    Next we will insert them one by one in the column vector:
+    vector<int> col
+        -> insert from back in col:
+            -> all the elements in the map belonging to same col
+
 ```cpp
-/// WILL WRITE TOMORROW TO CHECK MEMORY;
+vector<vector<int>> verticalTraversal(TreeNode* root) {
+    map<int, map<int, multiset<int>>> mp;
+    queue<pair<TreeNode*, pair<int, int>>> q;
+
+    q.push({root, {0, 0}});
+
+    while (!q.empty()) {
+        auto front_val = q.front();
+        TreeNode* front_node = front_val.first;
+        int row = front_val.second.first;
+        int col = front_val.second.second;
+
+        q.pop();
+
+        mp[row][col].insert(front_node->val);
+
+        if (front_node->left != NULL) q.push({front_node->left, {row - 1, col + 1}});
+        if (front_node->right != NULL) q.push({front_node->right, {row + 1, col + 1}});
+    }
+
+    vector<vector<int>> ans;
+
+    for (auto it: mp) {
+        vector<int> col;
+
+        for (auto el: it.second) {
+            col.insert(col.end(), el.second.begin(), el.second.end());
+        }
+
+        ans.push_back(col);
+    }
+
+    return ans;
+}
 ```
 ________________________________
 #### Ans 8.
@@ -359,7 +430,9 @@ ________________________________
 #### Ans 12.
     Solution 1: Do BFS and add the back values from the BFS vector
 
-    Solution 2: // WILL CHECK LATER -> RELATED TO RECURSION 
+    Solution 2: // RELATED TO RECURSION (mentioned after solution 1)
+
+Solution 1: 
 ```cpp
     vector<vector<int>> levelOrder(TreeNode* root) {
         vector<vector<int>> ans;
@@ -402,6 +475,28 @@ ________________________________
             res.push_back(level.back());
         }
 
+        return res;    
+    }
+```
+Solution 2: 
+    1. Just travel recursively both the right and left along with the level.
+    2. Mantain a ans array which checks if it's size == level:
+        a. If it is then ans.push(root->val)
+```cpp
+    void recurseRight(TreeNode* root, vector<int> ans, int level) {
+        if root == NULL -> return
+
+        if (ans.size == level) ans.push(root->val)
+
+        recurseRight(root -> right, ans, level + 1) // travel right half
+        recurseRight(root -> left, ans, level + 1) // travel left half
+    }
+
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> ans;
+
+        recurseRight(root, ans, 0)
+        
         return res;    
     }
 ```

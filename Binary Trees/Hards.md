@@ -4,25 +4,31 @@
 
 2. [LCA in Binary Tree](#ans-2)
 
-3. Maximum width of a Binary Tree
+3. [Maximum width of a Binary Tree](#ans-3)
 
 4. [Check for Children Sum Property](#ans-4)
 
-5. Print all the Nodes at a distance of K in a Binary Tree
+5. Print all the Nodes at a distance of K from given node in a Binary Tree
 
-6. Construct Binary Tree from inorder and preorder
+6. [Count total Nodes in a COMPLETE Binary Tree](#ans-6)
 
-7. Construct the Binary Tree from Postorder and Inorder 
+7. Minimum time taken to BURN the Binary Tree from a Node
+
+8. Construct Binary Tree from inorder and preorder
+
+9. Construct the Binary Tree from Postorder and Inorder 
 Traversal
 
-8. Flatten Binary Tree to LinkedList
+10. Serialize and deserialize Binary Tree
+
+11. Flatten Binary Tree to LinkedList
 
 ## Solutions: 
 
 #### Ans 1.
 
     Very Basic and fuck off solution:
-        1. traverse the tree and add nodes to the tree.
+        1. depth traverse the tree and add nodes to the tree.
         2. if reach leaf node -> add it to ans vec<vec>
         3. always pop back the added elements after traversal
 
@@ -54,12 +60,46 @@ Traversal
         return ans;
     }
 ```
+
+The above solution is for printing all the paths to leaf node
+
+The below solution is for printing Root to Given Node Path in Binary Tree
+
+```cpp
+bool getPath(TreeNode* A, vector<int> ans, int B) {
+    if (A == NULL) return false
+    
+    ans.push(A -> val)
+
+    if (A->val == B) return true
+
+    if (getPath(A->left, ans, B) or getPath(A->right, ans, B)) return true // travel both left and right
+
+    ans.pop()
+
+    return false
+}
+
+vector<int> Root_to_Given_Node_Path(TreeNode* A, int B) {
+        vector<int> ans;
+
+        if (A == NULL) return ans
+
+        getPath(A, ans, B);
+
+        return ans;
+    }
+```
 ________________________________
 #### Ans 2.
+The Lowest Common Ancestor of two nodes p and q in a binary tree is the lowest node in the tree that has both p and q as descendants.
+A node can be a descendant of itself.
+
+Remember we have to return the lowest common ANCESTOR of the 2 nodes (it cant be the one in the middle).
+
     Clever solution, maine nahi socha tha yeh:
 
         1. Just return the node you are travelling if the node is either of the destination node, else return null;
-
         
 ```cpp
     Node* lowestCommonAncestor(Node* root, Node* p, Node* q) {
@@ -83,6 +123,46 @@ ________________________________
     }
 ```
 ________________________________
+#### Ans 3.
+    We do a level order traversal and assign each node the correct level according to rule:
+        left = (2 * current_level + 1)
+        right = (2 * current_level + 2)
+
+```cpp
+int widthOfBinaryTree(TreeNode* root) {
+    if (root == NULL) return 0;
+
+    int ans = 0;
+
+    queue<pair<TreeNode*, int>> q;
+    q.push({root, 0});
+
+    while (!q.empty()) {
+        int size = q.size();
+        auto front = q.front();
+        int front_level = front.second;
+
+        int first, last;
+
+        for (int i = 0; i < size; i++) {
+            TreeNode* front_node = q.front().first;
+            long long current_level = q.front().second - front_level;
+            q.pop();
+
+            if (i == 0) first = current_level;
+            if (i == size - 1) last = current_level;    
+
+            if (front_node->left) q.push({front_node->left, 2 * current_level + 1});
+            if (front_node->right) q.push({front_node->right, 2 * current_level + 2});
+        }
+
+        ans = max(last - first + 1, ans);
+    }       
+
+    return ans;
+}
+```
+________________________________
 #### Ans 4.
     Recurse over left and right:
         1. Check and calculate the left and right.
@@ -104,6 +184,52 @@ ________________________________
             }
         }
         return 0;
+    }
+```
+________________________________
+#### Ans 5.
+________________________________
+#### Ans 6.
+SOLUTION 1:
+    One way is to just do a BFS and then return the total size of the whole array (THIS CODE IS NOT WRITTEN)
+SOLUTION 2:
+    Check if the last level is completely filled:
+        If so, use the formula for total nodes in a perfect binary tree ie. 2^h - 1
+        If the last level is not completely filled, recursively count nodes in left and right subtrees
+```cpp
+    int leftHeight(TreeNode* root) {
+        int height = 0;
+
+        while (root) {
+            height++;
+            root = root->left;
+        }
+
+        return height;
+    }
+
+    int rightHeight(TreeNode* root) {
+        int height = 0;
+
+        while (root) {
+            height++;
+            root = root->right;
+        }
+
+        return height;
+    }
+
+    int countNodes(TreeNode* root) {
+        if (root == NULL) return 0;
+
+        int left = leftHeight(root);
+        int right = rightHeight(root);
+
+        if (right == left) {
+            return (1 << left) - 1; 
+        }
+
+        return 1 + countNodes(root->left) + countNodes(root->right);
     }
 ```
 ________________________________
