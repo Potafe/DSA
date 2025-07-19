@@ -350,8 +350,199 @@ vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
 ```
 ________________________________
 #### Ans 7.
+Using DFS:
+    The algorithm steps are as follows:
+
+    1.Create a corresponding visited matrix and initialize it to 0.
+
+    2. Start with boundary elements, once ‘O’ is found, call the DFS function for that element and mark it as visited. In order to traverse for boundary elements, you can traverse through the first row, last row, first column, and last column. 
+
+    3. DFS function call will run through all the unvisited neighboring ‘O’s in all 4 directions and mark them as visited so that they are not converted to ‘X’ in the future. The DFS function will not be called for the already visited elements to save time, as they have already been traversed. 
+
+    4. When all the boundaries are traversed and corresponding sets of ‘O’s are marked as visited, they cannot be replaced with ‘X’. All the other remaining unvisited ‘O’s are replaced with ‘X’. This can be done in the same input matrix as the problem talks about replacing the values, otherwise tampering with data is not advised. 
+```cpp
+void dfs(int row, int col, vector<vector<int>> &visited,
+    vector<vector<char>>& board, int delRow[], int delCol[]) {
+    visited[row][col] = 1;
+
+    int m = board.size();
+    int n = board[0].size();
+
+    for (int i = 0; i < 4; i++) {
+        int nRow = row + delRow[i];
+        int nCol = col + delCol[i];
+
+        if (nRow < 0 || nCol < 0 || nRow >= m || nCol >=n ||
+        visited[nRow][nCol] == 1 
+        || board[nRow][nCol] == 'X') continue;
+
+        dfs(nRow, nCol, visited, board, delRow, delCol);
+    }
+
+}
+
+void solve(vector<vector<char>>& board) {
+    int m = board.size();
+    int n = board[0].size();
+    
+    vector<vector<int>> visited(m, vector<int>(n, 0));   
+    
+    int delRow[] = {-1, 1, 0, 0};
+    int delCol[] = {0, 0, 1, -1}; 
+
+    for (int col = 0; col < n; col++) {
+        if (!visited[0][col] && board[0][col] == 'O') {
+            dfs(0, col, visited, board, delRow, delCol); 
+        }
+
+        if (!visited[m-1][col] && board[m-1][col] == 'O') {
+            dfs(m-1, col, visited, board, delRow, delCol); 
+        }
+    }
+
+    for (int row = 0; row < m; row++) {
+        if (!visited[row][0] && board[row][0] == 'O') {
+            dfs(row, 0, visited, board, delRow, delCol); 
+        }
+
+        if (!visited[row][n-1] && board[row][n-1] == 'O') {
+            dfs(row, n-1, visited, board, delRow, delCol); 
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (!visited[i][j] && board[i][j] == 'O') {
+                board[i][j] = 'X';
+            } 
+        }
+    }
+}
+```
+
+Using BFS: same idea but with BFS
+```cpp
+void bfs(int row, int col, vector<vector<int>> &visited,
+    vector<vector<char>>& board, int delRow[], int delCol[], int m, int n) {
+    queue<pair<int, int>> q;
+    q.push({row, col});
+    visited[row][col] = 1;
+    
+    while (!q.empty()) {
+        auto it = q.front();
+        int r = it.first;
+        int c = it.second;
+        q.pop();
+        
+        for (int i = 0; i < 4; i++) {
+            int nRow = r + delRow[i];
+            int nCol = c + delCol[i];
+
+            if (nRow < 0 || nCol < 0 || nRow >= m || nCol >=n ||
+            visited[nRow][nCol] == 1 
+            || board[nRow][nCol] == 'X') continue;
+
+            q.push({nRow, nCol});
+            visited[nRow][nCol] = 1;
+        }
+    }
+}
+
+void solve(vector<vector<char>>& board) {
+    int m = board.size();
+    int n = board[0].size();
+    
+    vector<vector<int>> visited(m, vector<int>(n, 0));   
+    
+    int delRow[] = {-1, 1, 0, 0};
+    int delCol[] = {0, 0, 1, -1}; 
+
+    for (int col = 0; col < n; col++) {
+        if (!visited[0][col] && board[0][col] == 'O') {
+            bfs(0, col, visited, board, delRow, delCol, m, n); 
+        }
+
+        if (!visited[m-1][col] && board[m-1][col] == 'O') {
+            bfs(m-1, col, visited, board, delRow, delCol, m, n); 
+        }
+    }
+
+    for (int row = 0; row < m; row++) {
+        if (!visited[row][0] && board[row][0] == 'O') {
+            bfs(row, 0, visited, board, delRow, delCol, m, n); 
+        }
+
+        if (!visited[row][n-1] && board[row][n-1] == 'O') {
+            bfs(row, n-1, visited, board, delRow, delCol, m, n); 
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (!visited[i][j] && board[i][j] == 'O') {
+                board[i][j] = 'X';
+            } 
+        }
+    }
+}
+```
 ________________________________
 #### Ans 8.
+    The Algorithm involves the following steps:
+
+    Firstly, we start by creating a queue data structure in order to store the word and the length of the sequence to reach that word as a pair. We store them in form of {word, steps}.
+
+    Then, we push the startWord into the queue with length as ‘1’ indicating that this is the word from which the sequence needs to start from.
+
+    We now create a hash set wherein, we put all the elements in wordList to keep a check on if we’ve visited that word before or not. In order to mark a word as visited here, we simply delete the word from the hash set. There is no point in visiting someone multiple times during the algorithm.
+
+    Now, we pop the first element out of the queue and carry out the BFS traversal where, for each word popped out of the queue, we try to replace every character with ‘a’ - ‘z’, and we get a transformed word. We check if the transformed word is present in the wordList or not.
+
+    If the word is present, we push it in the queue and increase the count of the sequence by 1 and if not, we simply move on to replacing the original character with the next character.
+
+    Remember, we also need to delete the word from the wordList if it matches with the transformed word to ensure that we do not reach the same point again in the transformation which would only increase our sequence length.
+
+    Now, we pop the next element out of the queue ds and if at any point in time, the transformed word becomes the same as the targetWord, we return the count of the steps taken to reach that word. Here, we’re only concerned about the first occurrence of the targetWord because after that it would only lead to an increase in the sequence length which is for sure not minimum.
+
+    If a transformation sequence is not possible, return 0.
+
+```cpp
+int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+    int n = beginWord.size();
+
+    queue<pair<string, int>> q;
+    q.push({beginWord, 1});
+
+    unordered_set<string> st(wordList.begin(), wordList.end());
+    st.erase(beginWord);
+
+    while (!q.empty()) {
+        auto it = q.front();
+        string word = it.first;
+        int steps = it.second;
+
+        q.pop();
+
+        if (word == endWord) return steps;
+
+        for (int i = 0; i < n; i++) {
+            char original = word[i];
+
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                word[i] = ch;
+
+                if (st.find(word) != st.end()) {
+                    st.erase(word);
+                    q.push({word, steps + 1});
+                }
+            }
+            word[i] = original;
+        }
+    }
+
+    return 0;
+}
+```
 ________________________________
 #### Ans 9.
 ________________________________
