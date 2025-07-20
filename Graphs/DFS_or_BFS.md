@@ -23,6 +23,9 @@
 ## Solutions: 
 
 #### Ans 1.
+    So we basically have to do any kind of a traversal,
+    and if the visited[node] = true and it's an adjacent node
+    just return true/false
 ________________________________
 #### Ans 2.
     So we basically need to do a BFS whenever we encounter a '2':
