@@ -20,8 +20,6 @@
 
 10. [Bipartite Graph](#ans-10)
 
-11. [Cycle Detection in Directed Graph](#ans-11)
-
 ## Solutions: 
 
 #### Ans 1.
@@ -545,8 +543,227 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
 ```
 ________________________________
 #### Ans 9.
+    The Algorithm for this problem involves the following steps:
+
+    1. Firstly, we start by creating a hash set to store all the elements present in the wordList which would make the search and delete operations faster for us to implement.
+
+    2. Next, we create a Queue data structure for storing the successive sequences/ path in the form of a vector which on transformation would lead us to the target word.
+
+    3. Now, we add the startWord to the queue as a List and also push it into the usedOnLevel vector to denote that this word is currently being used for transformation in this particular level.
+
+    4. Pop the first element out of the queue and carry out the BFS traversal, where for each word that popped out from the back of the sequence present at the top of the queue, we check for all of its characters by replacing them with ‘a’ - ‘z’ if they are present in the wordList or not. In case a word is present in the wordList, we simply first push it onto the usedOnLevel vector and do not delete it from the wordList immediately.
+
+    5. Now, push that word into the vector containing the previous sequence and add it to the queue. So we will get a new path, but we need to explore other paths as well, so pop the word out of the list to explore other paths.
+
+    6. After completion of traversal on a particular level, we can now delete all the words that were currently being used on that level from the usedOnLevel vector which ensures that these words won’t be used again in the future, as using them in the later stages will mean that it won’t be the shortest path anymore.
+
+    7. If at any point in time we find out that the last word in the sequence present at the top of the queue is equal to the target word, we simply push the sequence into the resultant vector if the resultant vector ‘ans’ is empty.
+
+    8. If the vector is not empty, we check if the current sequence length is equal to the first element added in the ans vector or not. This has to be checked because we need the shortest possible transformation sequences.
+
+    9. In case, there is no transformation sequence possible, we return an empty 2D vector.
+```cpp
+vector<vector<string>> findLadders(string beginWord, string endWord,
+    vector<string>& wordList) {
+    int n = beginWord.size();
+    vector<vector<string>> ans;
+
+    unordered_set<string> st(wordList.begin(), wordList.end());
+
+    queue<vector<string>> q;
+    q.push({beginWord});
+    
+    vector<string> usedOnLevel;
+    usedOnLevel.push_back(beginWord);
+    int level = 0;
+
+    while (!q.empty()) {
+        vector<string> vec = q.front();
+        q.pop();
+
+        if (vec.size() > level) {
+            level++;
+            for (auto it : usedOnLevel) {
+                st.erase(it);
+            }
+        }
+
+        string word = vec.back();
+
+        if (word == endWord) {
+            if (ans.size() == 0) {
+                ans.push_back(vec);
+            }
+            else if (ans[0].size() == vec.size()) {
+                ans.push_back(vec);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            char original = word[i];
+
+            for (char ch = 'a'; ch <= 'z'; ch++) {
+                word[i] = ch;
+
+                if (st.count(word) > 0) { 
+                    vec.push_back(word);
+                    q.push(vec);
+                    usedOnLevel.push_back(word);
+                    vec.pop_back();
+                }
+            }
+            word[i] = original;
+        }
+    }
+
+    return ans;    
+}
+```
+The approach used in this solution splits the problem into two parts:
+
+ - BFS Phase (Forward Traversal):
+
+	1. Used to compute the shortest distance (depth) from beginWord to every reachable word in the wordList.
+
+	2. Builds a depthMap (i.e., distance from beginWord) for each reachable word.
+
+	3. Efficiently avoids storing full transformation paths during BFS — instead, it records only how deep each word appears in the shortest path.
+
+-  DFS Phase (Backtracking):
+
+	1. Once the depthMap is built, a reverse DFS is used to reconstruct all possible shortest paths from endWord to beginWord, using depth constraints to ensure only valid shortest sequences are followed.
+
+	2. Paths are built in reverse (from endWord to beginWord) and then reversed before being added to the answer.
+
+- 🧠 Algorithm Steps:
+
+	1. Convert the wordList into a hash set (unordered_set) for fast lookups and deletions during BFS traversal.
+
+	2. Initialize a queue for BFS and start from the beginWord. Push it into the queue and assign it a depth of 1 in the depthMap.
+
+ - Perform BFS:
+
+	1. For each word dequeued, explore all one-letter transformations.
+
+	2. If a transformed word exists in wordSet (i.e., unvisited), enqueue it, remove it from wordSet, and assign it a depth of currentDepth + 1.
+
+	3. This ensures each word is processed only once (when it's first reached at the shortest depth).
+
+	4. Stop BFS once the endWord is reached, as we are only interested in the shortest paths.
+
+	5. If endWord is found in the depthMap, start DFS:
+
+	6. Begin with the endWord and recursively explore all previous-level words (i.e., words that appear one step before the current word in the shortest path).
+
+	7. For each valid previous-level word, add it to the current sequence and recurse.
+
+	8. Once the beginWord is reached, reverse the sequence and store it in the final answer.
+
+	9. Return all shortest sequences found during DFS traversal.
+
+- ✅ Why This Version Works Well (vs. Memory Limit Exceeded)
+
+	1. Avoids storing full paths during BFS, unlike the previous solution that pushes entire sequences to the queue.
+
+	2. Memory usage is controlled by keeping track only of depth levels and reconstructing valid paths after BFS.
+
+	3. No need for a usedOnLevel list because words are immediately removed from wordSet once they’re added to the queue — this is valid because we only care about shortest paths.
+```cpp
+vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+    unordered_map<string, int> depthMap;
+    vector<vector<string>> ans;
+    
+    unordered_set<string> wordSet(wordList.begin(), wordList.end());
+    queue<string> q;
+    q.push(beginWord);
+    depthMap[beginWord] = 1;
+    wordSet.erase(beginWord);
+    
+    while (!q.empty()) {
+        string word = q.front();
+        q.pop();
+        int steps = depthMap[word];
+        if (word == endWord) break;
+        for (int i = 0; i < word.size(); ++i) {
+            char original = word[i];
+            for (char ch = 'a'; ch <= 'z'; ++ch) {
+                word[i] = ch;
+                if (wordSet.count(word)) {
+                    q.push(word);
+                    wordSet.erase(word);
+                    depthMap[word] = steps + 1;
+                }
+            }
+            word[i] = original;
+        }
+    }
+    
+    if (depthMap.count(endWord)) {
+        vector<string> seq = {endWord};
+        dfs(endWord, beginWord, seq, depthMap, ans);
+    }
+    
+    return ans;
+}
+
+void dfs(string word, string beginWord, vector<string>& seq, unordered_map<string, int>& depthMap, vector<vector<string>>& ans) {
+    if (word == beginWord) {
+        reverse(seq.begin(), seq.end());
+        ans.push_back(seq);
+        reverse(seq.begin(), seq.end());
+        return;
+    }
+    
+    int steps = depthMap[word];
+    for (int i = 0; i < word.size(); ++i) {
+        char original = word[i];
+        for (char ch = 'a'; ch <= 'z'; ++ch) {
+            word[i] = ch;
+            if (depthMap.count(word) && depthMap[word] + 1 == steps) {
+                seq.push_back(word);
+                dfs(word, beginWord, seq, depthMap, ans);
+                seq.pop_back();
+            }
+        }
+        word[i] = original;
+    }
+}
+```
 ________________________________
 #### Ans 10.
-________________________________
-#### Ans 11.
+    Logic is simple:
+        1. Just do a simple DFS traversal and keep track of the visited by coloring them
+            alternately.
+        2. If visited[i] == color -> return false
+        3. Do this recursively
+```cpp
+bool dfs(int i, int color, vector<int> &visited,
+vector<vector<int>>& graph) {
+    visited[i] = color;
+
+    for (auto it: graph[i]) {
+        if (visited[it] == -1) {
+            if (!(dfs(it, !color, visited, graph))) return false;
+        }
+
+        else if (visited[it] == color) return false;
+    }
+
+    return true;
+}
+
+bool isBipartite(vector<vector<int>>& graph) {
+    int n = graph.size();
+
+    vector<int> visited(n, -1);
+
+    for (int i = 0; i < n; i++) {
+        if (visited[i] == -1) {
+            if (!(dfs(i, 1, visited, graph))) return false;
+        }
+    }   
+
+    return true;     
+}
+```
 ________________________________
