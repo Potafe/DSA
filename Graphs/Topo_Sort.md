@@ -197,6 +197,92 @@ bool isCyclic(int V, vector<vector<int>> &edges) {
 ```   
 ________________________________
 #### Ans 4.
+    This question is easy: if we detect a cycle: just return false:
+- Using DFS:
+```cpp
+bool dfs(int i, vector<int> &visited, 
+vector<int> &pathVisited, vector<vector<int>> &adjLs) {
+    visited[i] = 1;
+    pathVisited[i] = 1;
+
+    for (auto it: adjLs[i]) {
+        if (!visited[it]) {
+            if (!dfs(it, visited, pathVisited, adjLs)) return false;
+        }
+
+        else if (pathVisited[it]) return false;
+    }
+
+    pathVisited[i] = 0;
+    return true;
+}
+
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> adjLs(numCourses);
+
+    for (auto it: prerequisites) {
+        adjLs[it[0]].push_back(it[1]);
+    }
+
+    vector<int> visited(numCourses, 0);
+    vector<int> pathVisited(numCourses, 0);
+
+    for (int i = 0; i < numCourses; i++) {
+        if (!visited[i]) {
+            if (!dfs(i, visited, pathVisited, adjLs)) {
+                return false;
+            }
+        }
+    }
+
+    return true; 
+}
+
+```
+- Using Kahn's Algo (BFS topo sort, cycle detection)
+```cpp
+bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<vector<int>> adjLs(numCourses);
+
+    for (auto it: prerequisites) {
+        adjLs[it[0]].push_back(it[1]);
+    }
+
+    vector<int> inDegree(numCourses, 0);
+    
+    for (int i = 0; i < numCourses; i++) {
+        for (auto it: adjLs[i]) {
+            inDegree[it]++;
+        }
+    }
+
+    queue<int> q;
+
+    for (int i = 0; i < numCourses; i++) {
+        if (inDegree[i] == 0) {
+            q.push(i);
+        }
+    }
+
+    int processedCourses = 0;
+
+    while (q.size()) {
+        int node = q.front();
+        q.pop();
+        processedCourses++;
+
+        for (auto it: adjLs[node]) {
+            inDegree[it] -= 1;
+            if (inDegree[it] == 0) {
+                q.push(it);
+            }
+        }
+    }
+
+    return processedCourses == numCourses;
+}
+```
+
 ________________________________
 #### Ans 5.
 ________________________________
