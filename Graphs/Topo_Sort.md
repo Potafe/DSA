@@ -285,8 +285,204 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 
 ________________________________
 #### Ans 5.
+    All we have to do is find all the nodes which are part of the cycle.
+
+- Using DFS
+```cpp
+bool dfs(int i, vector<int> &visited,
+vector<int> &pathVisited, vector<vector<int>> &adjLs
+, vector<int> &ans) {
+    visited[i] = 1;
+    pathVisited[i] = 1;
+
+    for (auto it: adjLs[i]) {
+        if (!visited[it]) {
+            if (!dfs(it, visited, pathVisited, adjLs, ans)) return false;
+        }
+
+        else if (pathVisited[it]) return false;
+    }
+
+    pathVisited[i] = 0;
+    ans.push_back(i);
+    return true;
+}
+
+vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+    vector<int> visited(graph.size(), 0);
+    vector<int> pathVisited(graph.size(), 0);
+    vector<int> ans;
+
+    for (int i = 0; i < graph.size(); i++) {
+        if (!visited[i]) {
+            dfs(i, visited, pathVisited, graph, ans);
+        }
+    }
+
+    sort(ans.begin(), ans.end());
+    return ans; 
+}
+```
+
+- Using BFS
+
+    All we have to do in this case is:
+
+    1. Create a reverse graph (Destination -> Source)
+    2. Have an outdegree array 
+    3. Use Kahn's algo for traversing the reverse graph and marking
+        safe nodes (using safe array)
+    4. At last push all safe nodes to the ans.
+
+```cpp
+vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<vector<int>> reverseGraph(n);
+    vector<int> outDegree(n, 0);
+    vector<int> ans;
+
+    for (int i = 0; i < n; i++) {
+        for (int neighbor : graph[i]) {
+            reverseGraph[neighbor].push_back(i);
+            outDegree[i]++;
+        }
+    }
+
+    queue<int> q;
+
+    for (int i = 0; i < n; i++) {
+        if (outDegree[i] == 0) {
+            q.push(i);
+        }
+    }
+
+    vector<bool> safe(n, false);
+
+    while (!q.empty()) {
+        int node = q.front();
+        q.pop();
+        safe[node] = true;
+
+        for (int neighbor : reverseGraph[node]) {
+            outDegree[neighbor]--;
+            if (outDegree[neighbor] == 0) {
+                q.push(neighbor);
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (safe[i]) {
+            ans.push_back(i);
+        }
+    }
+
+    return ans;
+}
+```
 ________________________________
 #### Ans 6.
+    So all I have to do is something like this:
+
+```cpp
+for (int i = 0; i < dict.size(); i++) {
+    if (dict[i] != dict[i+1]) {
+        int len = min(dict[i].size(), dict[i+1].size());
+        for (int ptr = 0; ptr < len; ptr++) {
+            if (dict[i][ptr] != dict[i+1][ptr]) {
+                adj[dict[i][ptr] - 'a'].push_back(dict[i+1][ptr] - 'a');
+                break;
+            }
+        }
+    }
+}
+```
+
+    Once the adjLs is created, all I have to do is topo sort the list and return the ans.
+
+```cpp
+vector<int> inDegree(V, 0);
+
+for (int i = 0; i < V; i++) {
+    for (auto it: adjLs[i]) {
+        inDegree[it]++;
+    }
+}
+
+queue<int> q;
+
+for (int i = 0; i < V; i++) {
+    if (inDegree[i] == 0) {
+        q.push(i);
+    }
+}
+
+vector<int> ans;
+while (!q.empty()) {
+    int node = q.front();
+    q.pop();
+    
+    ans.push_back(node);
+
+    for (auto it : adjLs[node]) {
+        inDegree[it]--;
+        if (inDegree[it] == 0) q.push(it);
+    }
+}
+
+return ans;
+```
 ________________________________
 #### Ans 7.
+    What we need to do is:
+
+    1. We know that a course is impossible if there is a cycle in the courses.
+    2. For every traversal we store the path traveled
+    3. If cycle is detected and we return false:
+        a. return {}
+    4. Else ans.push(node)
+    5. Return ans
+```cpp
+bool dfs(int i, vector<int> &visited,
+vector<int> &pathVisited, vector<vector<int>> &adjLs
+, vector<int> &ans) {
+    visited[i] = 1;
+    pathVisited[i] = 1;
+
+    for (auto it: adjLs[i]) {
+        if (!visited[it]) {
+            if (!dfs(it, visited, pathVisited, adjLs, ans)) return false;
+        }
+
+        else if (pathVisited[it]) return false;
+    }
+
+    pathVisited[i] = 0;
+    ans.push_back(i);
+    return true;
+}
+
+vector<int> findOrder(int numCourses, 
+vector<vector<int>>& prerequisites) {
+    vector<vector<int>> adjLs(numCourses);
+
+    for (auto it: prerequisites) {
+        adjLs[it[0]].push_back(it[1]);
+    }
+
+    vector<int> visited(numCourses, 0);
+    vector<int> pathVisited(numCourses, 0);
+    vector<int> ans;
+
+    for (int i = 0; i < numCourses; i++) {
+        if (!visited[i]) {
+            if (!dfs(i, visited, pathVisited, adjLs, ans)) {
+                return {};
+            }
+        }
+    }
+
+    return ans; 
+}
+```
 ________________________________
