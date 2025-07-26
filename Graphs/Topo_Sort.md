@@ -18,7 +18,8 @@
 ## Solutions: 
 
 #### Ans 1.
-    In topological sorting, node u will always appear before node v if there is a directed edge from node u towards node v(u -> v).
+    In topological sorting, node u will always appear before node v 
+    if there is a directed edge from node u towards node v(u -> v).
 
     Topological sorting only exists in Directed Acyclic Graph (DAG). 
     If the nodes of a graph are connected through directed edges and the graph does not contain a cycle, 
@@ -26,10 +27,21 @@
 
     Why topological sort only exists in DAG:
 
-    Case 1 (If the edges are undirected): If there is an undirected edge between node u and v, it signifies that there is an edge from node u to v(u -> v) as well as there is an edge from node v to u(v -> u). But according to the definition of topological sorting, it is practically impossible to write such ordering where u appears before v and v appears before u simultaneously. So, it is only possible for directed edges.
+    Case 1 (If the edges are undirected): If there is an undirected edge between 
+    node u and v, it signifies that there is an edge from 
+    node u to v(u -> v) as well as there is an edge from node v to u(v -> u). 
+    But according to the definition of topological sorting, 
+    it is practically impossible to write such ordering 
+    where u appears before v and v appears before u simultaneously. 
+    So, it is only possible for directed edges.
     
     Case 2(If the directed graph contains a cycle): The following directed graph contains a cycle:
-    If we try to get topological sorting of this cyclic graph, for edge 1->2, node 1 must appear before 2, for edge 2->3, node 2 must appear before 3, and for edge 3->1, node 3 must appear before 1 in the linear ordering. But such ordering is not possible as there exists a cyclic dependency in the graph. Thereby, topological sorting is only possible for a directed acyclic graph.
+    If we try to get topological sorting of this cyclic graph, 
+    for edge 1->2, node 1 must appear before 2, for edge 2->3, 
+    node 2 must appear before 3, and for edge 3->1, 
+    node 3 must appear before 1 in the linear ordering. 
+    But such ordering is not possible as there exists a cyclic dependency 
+    in the graph. Thereby, topological sorting is only possible for a directed acyclic graph.
 
     The algorithm steps are as follows:
 
@@ -88,14 +100,22 @@ ________________________________
 
     The algorithm steps are as follows:
 
-    1. First, we will calculate the indegree of each node and store it in the indegree array. We can iterate through the given adj list, and simply for every node u->v, we can increase the indegree of v by 1 in the indegree array. 
+    1. First, we will calculate the indegree of each node and store it in the indegree array. 
+    We can iterate through the given adj list, 
+    and simply for every node u->v, we can increase the indegree of v by 1 in the indegree array. 
     
-    2. Initially, there will be always at least a single node whose indegree is 0. So, we will push the node(s) with indegree 0 into the queue.
+    2. Initially, there will be always at least a single node whose indegree is 0. 
+    So, we will push the node(s) with indegree 0 into the queue.
     
-    3. Then, we will pop a node from the queue including the node in our answer array, and for all its adjacent nodes, we will decrease the indegree of that node by one. For example, if node u that has been popped out from the queue has an edge towards node v(u->v), we will decrease indegree[v] by 1.
+    3. Then, we will pop a node from the queue including the node in our answer array, 
+    and for all its adjacent nodes, we will decrease the indegree of that node by one. 
+    For example, if node u that has been popped out from the queue has an 
+    edge towards node v(u->v), we will decrease indegree[v] by 1.
     
-    4. After that, if for any node the indegree becomes 0, we will push that node again into the queue.
-    We will repeat steps 3 and 4 until the queue is completely empty. Finally, completing the BFS we will get the linear ordering of the nodes in the answer array.
+    4. After that, if for any node the indegree becomes 0, 
+    we will push that node again into the queue.
+    We will repeat steps 3 and 4 until the queue is completely 
+    empty. Finally, completing the BFS we will get the linear ordering of the nodes in the answer array.
 ```cpp
 vector<int> topoSort(int V, vector<vector<int>>& edges) {
     vector<vector<int>> adjLs(V);
@@ -140,7 +160,8 @@ ________________________________
 #### Ans 3.
     Why visited alone is not enough:
 
-    -> In a directed graph, a node might be visited through multiple paths. Just because a node was visited earlier doesn't mean it's part of the current path that could form a cycle.
+    -> In a directed graph, a node might be visited through multiple paths. 
+    Just because a node was visited earlier doesn't mean it's part of the current path that could form a cycle.
 
     -> So, we need two things:
         1. visited: marks nodes that have been completely processed (safe to skip later).
@@ -148,11 +169,14 @@ ________________________________
 
     What does pathVisited do?
 
-    -> Let’s say we're doing DFS from node u, and during DFS we encounter a neighbor v:
+    -> Let’s say we're doing DFS from node u, 
+    and during DFS we encounter a neighbor v:
     -> If v is not visited, continue DFS normally.
     -> If v is visited:
-        -> If v is in the current DFS path (i.e., pathVisited[v] == 1), then there's a back edge → cycle.
-        -> If pathVisited[v] == 0, it's part of another traversal and already processed, so no cycle here.
+        -> If v is in the current DFS path (i.e., pathVisited[v] == 1), 
+        then there's a back edge → cycle.
+        -> If pathVisited[v] == 0, 
+        it's part of another traversal and already processed, so no cycle here.
 
 ```cpp
 bool dfs(int node, vector<int> &visited, 
