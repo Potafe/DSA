@@ -22,26 +22,29 @@
     if there is a directed edge from node u towards node v(u -> v).
 
     Topological sorting only exists in Directed Acyclic Graph (DAG). 
-    If the nodes of a graph are connected through directed edges and the graph does not contain a cycle, 
+    If the nodes of a graph are connected through directed edges and 
+    the graph does not contain a cycle, 
     it is called a directed acyclic graph(DAG). 
 
     Why topological sort only exists in DAG:
 
-    Case 1 (If the edges are undirected): If there is an undirected edge between 
-    node u and v, it signifies that there is an edge from 
-    node u to v(u -> v) as well as there is an edge from node v to u(v -> u). 
-    But according to the definition of topological sorting, 
-    it is practically impossible to write such ordering 
-    where u appears before v and v appears before u simultaneously. 
-    So, it is only possible for directed edges.
+    Case 1 (If the edges are undirected): 
+        If there is an undirected edge between 
+        node u and v, it signifies that there is an edge from 
+        node u to v(u -> v) as well as there is an edge from node v to u(v -> u). 
+        But according to the definition of topological sorting, 
+        it is practically impossible to write such ordering 
+        where u appears before v and v appears before u simultaneously. 
+        So, it is only possible for directed edges.
     
-    Case 2(If the directed graph contains a cycle): The following directed graph contains a cycle:
-    If we try to get topological sorting of this cyclic graph, 
-    for edge 1->2, node 1 must appear before 2, for edge 2->3, 
-    node 2 must appear before 3, and for edge 3->1, 
-    node 3 must appear before 1 in the linear ordering. 
-    But such ordering is not possible as there exists a cyclic dependency 
-    in the graph. Thereby, topological sorting is only possible for a directed acyclic graph.
+    Case 2(If the directed graph contains a cycle): 
+        The following directed graph contains a cycle:
+        If we try to get topological sorting of this cyclic graph, 
+        for edge 1->2, node 1 must appear before 2, for edge 2->3, 
+        node 2 must appear before 3, and for edge 3->1, 
+        node 3 must appear before 1 in the linear ordering. 
+        But such ordering is not possible as there exists a cyclic dependency 
+        in the graph. Thereby, topological sorting is only possible for a directed acyclic graph.
 
     The algorithm steps are as follows:
 
@@ -50,7 +53,8 @@
     2. Make sure to carry a visited array(all elements are initialized to 0) and a STACK data structure, 
     where we are going to store the nodes after completing the DFS call.
     
-    3. In the DFS call, first, the current node is marked as visited. Then DFS call is made for all its adjacent nodes.
+    3. In the DFS call, first, the current node is marked as visited. 
+    Then DFS call is made for all its adjacent nodes.
     
     4. After visiting all its adjacent nodes, DFS will backtrack to the previous node and meanwhile, 
     the current node is pushed into the stack.
