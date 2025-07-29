@@ -191,8 +191,10 @@ ________________________________
 
 #### Ans 3.
 
-    1. We would be using a set and a distance array of size V (where ‘V’ are the number of nodes in the graph) 
-    initialized with infinity (indicating that at present none of the nodes are reachable from the source node) 
+    1. We would be using a set and a distance array of size V 
+    (where ‘V’ are the number of nodes in the graph) 
+    initialized with infinity (indicating that at present none of 
+    the nodes are reachable from the source node) 
     and initialize the distance to source node as 0.
     
     2. We push the source node to the set along with its distance which is also 0.
@@ -201,12 +203,16 @@ ________________________________
     If the current reachable distance is better than the previous distance indicated by the distance array, 
     we update the distance and insert it in the set.
     
-    4. A node with a lower distance would be first erased from the set as opposed to a node with a higher distance. 
-    By following step 3, until our set becomes empty, we would get the minimum distance from the source node to all other nodes. 
+    4. A node with a lower distance would be first erased from 
+    the set as opposed to a node with a higher distance. 
+    By following step 3, until our set becomes empty, we would get the
+    minimum distance from the source node to all other nodes. 
     We can then return the distance array. 
     
-    5. The only difference between using a Priority Queue and a Set is that in a set we can check if there exists a pair 
-    with the same node but a greater distance than the current inserted node as there will be no point in keeping 
+    5. The only difference between using a Priority Queue 
+    and a Set is that in a set we can check if there exists a pair 
+    with the same node but a greater distance 
+    than the current inserted node as there will be no point in keeping 
     that node into the set if we come across a much better value than that. 
     So, we simply delete the element with a greater distance value for the same node.
 
@@ -218,7 +224,6 @@ vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
         adjLs[it[0]].push_back({it[1], it[2]});
     }
     
-        
     set<pair<int, int>> seti;
     seti.insert({0, src});
     
@@ -263,6 +268,48 @@ ________________________________
     If the current reachable distance is better than the previous distance indicated by the distance array, 
     we update the distance and push it into the queue.
 
+```cpp
+vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
+    vector<vector<pair<int, int>>> adj(V);
+    
+    for (auto it: edges) {
+        adj[it[0]].push_back({it[1], it[2]});
+    }
+    
+    // pair<int, int>:
+    //    This specifies the type of elements that will be stored in the priority queue.
+    // vector<pair<int, int>>:
+    //    This specifies the underlying container used to implement the priority queue. 
+    //    By default, std::priority_queue uses std::vector as its container.
+    // greater<pair<int, int>>:
+    //    This is the comparator (or comparison function) used to determine the priority of elements.
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    
+    vector<int> distance(V, 1e9);
+    
+    
+    distance[src] = 0;
+    pq.push({0, src});
+    
+    while (!pq.empty()) {
+        int node = pq.top().second;
+        int dis = pq.top().first;
+        pq.pop();
+
+        for (auto it : adj[node]) {   
+            int v = it.first;
+            int w = it.second;
+            
+            if (dis + w < distance[v]) {
+                distance[v] = dis + w;
+                pq.push({dis + w, v});
+            }
+        }
+    }
+    
+    return distance;
+}
+```
 ________________________________
 
 #### Ans 5.
