@@ -313,19 +313,170 @@ vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
 ________________________________
 
 #### Ans 5.
+    We implement simple Djisktra:
+        1. Base Case if grid[0][0] == 1 -> return -1
+        2. Now we make a distance array and a queue:
+            distance array = [][] // 2D Array
+            queue = {distance, {row, col}} // Contains distance and row and col pair
+        3. Now we traverse in 8 directions:
+            dr[] = [-1, 0, 1, 0, -1, -1, 1, 1]
+            dc[] = [0, 1, 0, -1, -1, 1, -1, 1]
+        4. Traverse according to given rule and if destination reached:
+            return distance (from queue)
+        5. Else queue.push(distance + 1, {row, col})
+```cpp
+int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+    if (grid[0][0] == 1) return -1;
+    
+    int M = grid.size();
+    int N = grid[0].size();
 
+    vector<vector<int>> distance(M, vector<int>(N, 1e9));
+    distance[0][0] = 1;
+
+    queue<pair<int, pair<int, int>>> q;
+    q.push({1, {0, 0}});
+
+    int dr[] = {-1, 0, 1, 0, -1, -1, 1, 1};
+    int dc[] = {0, 1, 0, -1, -1, 1, -1, 1};
+
+    while (!q.empty()) {
+        auto it = q.front();
+        int dis = it.first;
+        int row = it.second.first;
+        int col = it.second.second;
+
+        q.pop();
+
+        if (row == M - 1 && col == N - 1) return dis;
+
+        for (int i = 0; i < 8; i++) {
+            int newr = row + dr[i];
+            int newc = col + dc[i];
+
+            if (newr >= 0 && newr < M && newc >= 0 && newc < N && 
+            grid[newr][newc] == 0 && dis + 1 < distance[newr][newc]) {
+                distance[newr][newc] = dis + 1;
+                
+                if (row == M - 1 && col == N - 1) return dis;
+
+                q.push({dis + 1, {newr, newc}});
+            }
+        }
+    }
+
+    return -1;
+}
+```
 ________________________________
 
 #### Ans 6.
+    So we basically have this:
+            1. Grid -> x and y coordinates and a value
+            2. Goal is to reach M - 1, N - 1
+            3. Maximum absolute difference should be minimum
 
+    What we can do is use Dijkstra's algorithm to 
+    find the minimum maximum absolute difference path:
+            1. We use a priority queue to always expand the path with the smallest maximum absolute difference.
+            2. Keep track of the maximum absolute difference for each cell.
+            3. Update the maximum absolute difference when we find a better path.
+
+```cpp
+// So we create a distance array
+vector<vector<int>> dist(M, vector<int>(N, INT_MIN))
+dist[0][0] = 0
+
+// Now we create a priority queue
+priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;
+q.push({0, {0, 0}})
+
+int dx = {-1, 1, 0, 0}
+int dy = {0, 0, -1, 1}
+
+// Traverse the grid using Dijkstra's algorithm
+while (q.size()) {
+    auto it = q.top()
+    int dist = it.first
+    int x = it.second.first
+    int y = it.second.second
+
+    q.pop()
+
+    if (x == M - 1 && y == N - 1) return dist
+
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+
+        if (nx >= 0 && nx < M && ny >= 0 && ny < N) {
+                // Calculate the new distance which should be MAX absolute difference
+                int newDist = max(abs(grid[nx][ny] - grid[x][y]), dist);
+                if (newDist > dist[nx][ny]) {
+                        dist[nx][ny] = newDist;
+                        q.push({newDist, {nx, ny}});
+                }
+        }
+    }
+}
+```
 ________________________________
 
 #### Ans 7.
+    What we do is basically Djisktra with a constraint of stops:
+            1. Keep a distance array which contains both dist and stops
+            2. Keep a priority queue to store the least costly path first
+            3. Djikstra that shit
 
+```cpp
+int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+    if (src == dst) return 0;
+
+    vector<vector<pair<int, int>>> adjLs(n);
+
+    for (auto it: flights) {
+        adjLs[it[0]].push_back({it[1], it[2]});
+    }
+
+    // pair<int, pair<int, int>> -> <cost, <point, stops>>
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> q;
+    q.push({0, {src, 0}});
+
+    // distance array which stores both distance and stops
+    vector<vector<int>> dist(n, vector<int>(k + 2, INT_MAX)); 
+    dist[src][0] = 0;
+
+    while (!q.empty()) {
+        auto top = q.top();
+        q.pop();
+
+        int cost = top.first;
+        int point = top.second.first;
+        int stops = top.second.second;
+
+        if (point == dst) return cost;
+
+        if (stops > k) continue;
+
+        for (auto& neighbor : adjLs[point]) {
+            int nextPoint = neighbor.first;
+            int nextCost = neighbor.second;
+
+            if (cost + nextCost < dist[nextPoint][stops + 1]) {
+                dist[nextPoint][stops + 1] = cost + nextCost;
+                q.push({dist[nextPoint][stops + 1], {nextPoint, stops + 1}});
+            }
+        }
+    }
+
+    return -1;
+}
+```
 ________________________________
 
 #### Ans 8.
-
+```cpp
+```
 ________________________________
 
 #### Ans 9.
@@ -345,5 +496,51 @@ ________________________________
 ________________________________
 
 #### Ans 13.
+    Standard Djikstra:
+        1. Make a distance array
+        2. Have priority_queue
+        3. Return -1 if distance has a 1e9
+        4. Else return max value in distance (as that would be the min time to traverse all nodes)
+```cpp
+int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+    vector<vector<pair<int, int>>> adjLs(n + 1);
 
+    for (auto it: times) {
+        adjLs[it[0]].push_back({it[1], it[2]});
+    }
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+    q.push({0, k});
+
+    vector<int> dist(n + 1, 1e9);
+    dist[k] = 0;
+
+    while (q.size()) {
+        auto it = q.top();
+        int node = it.second;
+        int distance = it.first;
+        q.pop();
+
+        for (auto adj: adjLs[node]) {
+            int adjNode = adj.first;
+            int adjwt = adj.second;
+
+            if (adjwt + distance < dist[adjNode]) {
+                dist[adjNode] = adjwt + distance;
+                q.push({dist[adjNode], adjNode});
+            }
+        }
+    }
+
+    int mini = -1e9;
+
+    for (int i = 1; i < dist.size(); i++) {
+        if (dist[i] == 1e9) return -1;
+        if (i == k) continue;
+        mini = max(mini, dist[i]);
+    }
+    
+    return mini;
+}
+```
 ________________________________
