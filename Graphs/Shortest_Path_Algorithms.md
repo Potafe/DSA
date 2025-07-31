@@ -190,7 +190,9 @@ vector<int> shortestPath(int V, int E, vector<vector<int>>& edges) {
 ________________________________
 
 #### Ans 3.
-
+    Time: O((|V| + |E|) log V)
+    Space: O(|V| + |E|)
+    
     1. We would be using a set and a distance array of size V 
     (where ‘V’ are the number of nodes in the graph) 
     initialized with infinity (indicating that at present none of 
@@ -475,16 +477,130 @@ int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int
 ________________________________
 
 #### Ans 8.
+    0. First we make a adjLs:
+        adjLs = [
+            0: [[4, 5], [1, 2]]
+            ...
+        ]
+
+    1. Now we simply do a Djikstra 
+    2. Store the distance in the distance array
+    3. Store and update the ways array by checking if shortest distance is already the ways[adjNode]
+
 ```cpp
+priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> q;
+q.push({0, 0});
+
+vector<int> distance(n, 1e9);
+distance[0] = 0;
+
+vector<int> ways(n, 0);
+ways[0] = 1;
+
+while (q.size()) {
+    auto it = q.top();
+    int node = it.second;
+    int dist = it.first;
+    q.pop();
+
+    if (dist > distance[node]) continue;
+
+    for (auto adj : adjLs[node]) {
+        int adjNode = adj.first;
+        int adjWt = adj.second;
+
+        if (dist + adjWt < distance[adjNode]) {
+            distance[adjNode] = dist + adjWt;
+            ways[adjNode] = ways[node];
+            q.push({distance[adjNode], adjNode});
+        }    
+
+        else if (dist + adjWt == distance[adjNode]) {
+            ways[adjNode] = (ways[adjNode] + ways[node]);
+        }
+    }
+}
+
+return ways[n - 1];
 ```
 ________________________________
 
 #### Ans 9.
+    Idea is basically this:
+        0. Our graph will start from src and will have the next nodes as:
+            a. neighbour_node = node * given element in array
+        1. We don't have a "n" -> so we create a distance array of 1e6 size
+        2. Now we simply do a Djikstra till we reach node == destination
 
+```cpp
+int mod = 100000;
+
+queue<pair<int, int>> q;
+q.push({0, start});
+
+vector<int> distance(1e7, 1e9);
+distance[start] = 0;
+
+while (q.size()) {
+    int node = q.front().first;
+    int steps = q.front().second;
+    q.pop();
+
+    for (int num: arr) {
+        int adjNode = (node * num) % mod;
+
+        if (adjNode == end) return steps + 1;
+
+        if (steps + 1 < distance[adjNode]) {
+            distance[adjNode] = steps + 1;
+            q.push({distance[adjNode], adjNode});
+        }
+    }
+}
+
+return -1;
+
+```
 ________________________________
 
 #### Ans 10.
+    Where Dijkstra's algorithm fails:
+     - If the graph contains negative edges.
+     - If the graph has a negative cycle
+    
+    Bellman-Ford's algorithm:
+     - Is only applicable for directed graphs
+     - To work for undirected graphs -> we convert them to directed graph
 
+```cpp
+vector<int> dist(V, 1e8);
+dist[src] = 0;
+
+for (int i = 0; i < V - 1; i++) {
+    for (auto it: edges) {
+        int u = it[0];
+        int v = it[1];
+        int wt = it[2];
+        
+        if (dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+            dist[v] = dist[u] + wt;
+        }
+    }
+    
+}
+
+for (auto it: edges) {
+    int u = it[0];
+    int v = it[1];
+    int wt = it[2];
+    
+    if (dist[u] != 1e8 && dist[u] + wt < dist[v]) {
+        return {-1};
+    }
+}
+
+return dist;
+```
 ________________________________
 
 #### Ans 11.
