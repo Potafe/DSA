@@ -604,11 +604,105 @@ return dist;
 ________________________________
 
 #### Ans 11.
+    In this algorithm, we are going to use the adjacency matrix method.
 
+    Adjacency Matrix: The adjacency matrix should store the edge weights 
+    for the given edges and the rest of the cells must be initialized with infinity().
+
+    1. After having set the adjacency matrix accordingly, we will run a loop 
+    from 0 to V-1(V = no. of vertices). In the kth iteration, this loop will 
+    help us to check the path via node k for every possible pair of nodes. 
+    Basically, this loop will change the value of k in the formula.
+    
+    2. Inside the loop, there will be two nested loops for generating every  
+    possible pair of nodes(nothing but to visit each cell of a 2D matrix using the nested loop). 
+    Among these two loops, the first loop will change the value of i 
+    and the second one will change the value of j in the formula.
+    
+```
+matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j])
+```
+
+    3. Inside these nested loops, we will apply the above formula to calculate 
+    the shortest distance between the pair of nodes.
+    
+    4. Finally, the adjacency matrix will store all the shortest paths. 
+    For example, matrix[i][j] will store the shortest path from node i to node j.
+
+```cpp
+for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+        if (matrix[i][j] == -1) {
+            matrix[i][j] = 1e9;
+        }
+        if (i == j) matrix[i][j] = 0;
+    }
+}
+
+for (int k = 0; k < n; k++) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+        }
+    }
+}
+
+for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+        if (matrix[i][j] == 1e9) {
+            matrix[i][j] = -1;
+        }
+    }
+}
+```
 ________________________________
 
 #### Ans 12.
 
+    1. Just do a Floyd Warshal to store the distance of each node's distance in a matrix
+    2. Then all we have to do is keep a count variable -> 
+        if count < cntCity 
+            -> cntCity = count 
+            -> cityNo = current city index
+
+```cpp
+vector<vector<int>> matrix(n, vector<int>(n, 1e9));
+        
+int cntCity = n;
+int cityNo = -1;
+
+for (int i = 0; i < n; i++) {
+    matrix[i][i] = 0;
+}
+
+for (auto it: edges) {
+    matrix[it[0]][it[1]] = it[2];
+    matrix[it[1]][it[0]] = it[2];
+} 
+
+for (int k = 0; k < n; k++) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+        }
+    }
+}
+
+for (int i = 0; i < n; i++) {
+    int count = 0;
+    for (int j = 0; j < n; j++) {
+        if (matrix[i][j] <= distanceThreshold) {
+            count++;
+        }
+    }
+    if (count <= cntCity) {
+        cntCity = count;
+        cityNo = i;
+    }
+}
+
+return cityNo;
+```
 ________________________________
 
 #### Ans 13.
