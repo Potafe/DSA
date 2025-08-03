@@ -176,7 +176,65 @@ void unionBySize(int u, int v) {
 ________________________________
 
 ### Kruskal's Algorithm
+
+    We will be implementing Kruskal’s algorithm using the Disjoint Set data structure
+
+The algorithm steps are as follows:
+
+1. First, we need to extract the edge information from the given 
+adjacency list in the format of (wt, u, v) and we will store the tuples in an array.
+
+2. Then the array must be sorted in the ascending order of the 
+weights so that while iterating we can get the edges with the minimum weights first.
+
+3. After that, we will iterate over the edge information, and for each tuple, we will apply the following operation:
+
+4. First, we will take the two nodes u and v from the tuple and check 
+if the ultimate parents of both nodes are the same or not using the 
+findUPar() function provided by the Disjoint Set data structure.
+
+5. If the ultimate parents are the same, we need not do anything to that 
+edge as there already exists a path between the nodes and we will continue to the next tuple.
+
+6. If the ultimate parents are different, we will add the weight of the 
+edge to our final answer (i.e. mstWt variable used in the following code) and 
+apply the union operation(i.e. either unionBySize(u, v) or unionByRank(u, v)) 
+with the nodes u and v. The union operation is also provided by the Disjoint Set.
+
+7. Finally, we will get our answer (in the mstWt variable as used in the following code).
+
+```cpp
+nt kruskalsMST(int V, vector<vector<int>> &edges) {
+    for (auto& it : edges) {
+        swap(it[0], it[2]);
+    }
+    
+    sort(edges.begin(), edges.end());
+    
+    DisjointSet ds(V);
+    
+    int mostWeight = 0;
+    
+    for (auto it: edges) {
+        int wt = it[0];
+        int u = it[1];
+        int v = it[2];
+        
+        int ulp_u = ds.findUPar(u);
+        int ulp_v = ds.findUPar(v);
+        
+        if (ulp_u != ulp_v) {
+            mostWeight += wt;
+            ds.UnionByRank(u, v);
+        }
+        
+    }
+    
+    return mostWeight;
+}
+```
 ________________________________
+
 ### Number of Operations to Make Network Connected
 ________________________________
 ### Most Stones Removed with Same Rows or Columns
