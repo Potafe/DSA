@@ -204,7 +204,7 @@ with the nodes u and v. The union operation is also provided by the Disjoint Set
 7. Finally, we will get our answer (in the mstWt variable as used in the following code).
 
 ```cpp
-nt kruskalsMST(int V, vector<vector<int>> &edges) {
+int kruskalsMST(int V, vector<vector<int>> &edges) {
     for (auto& it : edges) {
         swap(it[0], it[2]);
     }
@@ -382,6 +382,7 @@ vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
 ________________________________
 
 ### Number of Islands II
+
 ________________________________
 
 ### Making a Large Island
