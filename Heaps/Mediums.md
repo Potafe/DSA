@@ -11,17 +11,17 @@
 
 ## Solutions:
 
-### Ans 1: [Kth Largest Element in an Array (using Priority Queue)](#ans-1)
+### Ans 1
 
 NOT EVEN GOING TO SOLVE THIS 
 ________________________________
 
-### Ans 2: [Kth Smallest Element in an Array (using Priority Queue)](#ans-2)
+### Ans 2
 
 NOT EVEN GOING TO SOLVE THIS 
 ________________________________
 
-### Ans 3: [Sort K Sorted Array](#ans-3)
+### Ans 3
 
 The approach is basic:
 
@@ -52,7 +52,7 @@ void nearlySorted(vector<int>& arr, int k) {
 
 ________________________________
 
-### Ans 4: [Merge M Sorted Lists](#ans-4)
+### Ans 4
 
 The approach is simple:
 
@@ -85,11 +85,11 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
 ```
 ________________________________
 
-### Ans 5: [Replace Each Array Element by its Corresponding Rank](#ans-5)
+### Ans 5
 
 ________________________________
 
-### Ans 6: [Task Scheduler](#ans-6)
+### Ans 6
 
 - Using priority queue
 
@@ -212,7 +212,7 @@ int leastInterval(vector<char>& tasks, int n) {
 ```
 ________________________________
 
-### Ans 7: [Hands of Straights](#ans-7)
+### Ans 7
 
 #### This is more of a greedy problem:
 1. We init a map (not an unordered_map) and count the frequency of each element.
