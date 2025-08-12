@@ -85,6 +85,7 @@ ________________________________
 
 ### Ans 2
 
+WILL SOLVE LATER
 ________________________________
 
 ### Ans 3
@@ -119,10 +120,69 @@ ________________________________
 
 ### Ans 4
 
+WILL SOLVE LATER
+
 ________________________________
 
 ### Ans 5
 
+What we basically do is:
+
+1. Maintain a max and min heap -> the maxHeap stores low_nums and minHeap stores hi_nums.
+2. Everytime upon adding a new number -> we add to minHeap the largest low_num in minHeap and fill the maxHeap with the lowest hi_num.
+3. If size of both is equal we return -> maxHeap.top + minHeap.top / 2.0, else we return maxHeap.top
+
+```
+DRY RUN:
+
+ADD(2)
+MAX HEAP: 2
+MIN HEAP: 2
+MAX HEAP: 0
+MAX HEAP: 2
+MINHEAP: 0
+FIND MEDIAN: 2
+
+ADD(3)
+MAX HEAP: 3, 2
+MIN HEAP: 3
+MAX HEAP: 2
+FIND MEDIAN: 3 + 2 / 2 = 2.5
+
+ADD(4)
+MAX HEAP: 4, 2
+MIN HEAP: 3, 4
+MAX HEAP: 2
+MAX HEAP: 3, 2
+MIN HEAP: 3
+FIND MEDIAN: 3
+```
+
+```cpp
+class MedianFinder {
+    priority_queue<int> maxHeap;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
+public:
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        maxHeap.push(num);
+        minHeap.push(maxHeap.top());
+        maxHeap.pop();
+        if (minHeap.size() > maxHeap.size()) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }    
+    }
+    
+    double findMedian() {
+        if (maxHeap.size() > minHeap.size()) return maxHeap.top();
+        return (maxHeap.top() + minHeap.top()) / 2.0;    
+    }
+};
+```
 ________________________________
 
 ### Ans 6
