@@ -152,10 +152,72 @@ ________________________________
 
 #### Ans 7.
 
+1. We basically push everything to stack 1 in order (root, left, right)
+2. Now we push everything to stack 2 in order (root, right, left)
+
+```cpp
+vector<int> postorderTraversal(TreeNode* root) {
+    if (root == nullptr) return {};
+    vector<int> ans;
+
+    stack<TreeNode*> st1;
+    stack<TreeNode*> st2;
+
+    st1.push(root);
+
+    while (st1.size()) {
+        root = st1.top();
+        st1.pop();
+        st2.push(root);
+
+        if (root->left != NULL) st1.push(root->left);
+        if (root->right != NULL) st1.push(root->right);
+    }
+
+    while (st2.size()) {
+        ans.push_back(st2.top()->val);
+        st2.pop();
+    }
+
+    return ans;
+}
+```
 ________________________________
 
 #### Ans 8.
 
+1. We traverse the left tree first and push it into the stack
+2. After left view is completed push it into ans array
+3. Now we travel the right tree
+
+```cpp
+vector<int> postorderTraversal(TreeNode* root) {
+    vector<int> ans;
+    if (root == nullptr) return ans;
+
+    stack<TreeNode*> st;
+    TreeNode* curr = root;
+    TreeNode* lastVisited = nullptr;
+
+    while (curr != nullptr || !st.empty()) {
+        while (curr != nullptr) {
+            st.push(curr);
+            curr = curr->left;
+        }
+
+        TreeNode* topNode = st.top();
+        if (topNode->right == nullptr || topNode->right == lastVisited) {
+            ans.push_back(topNode->val);
+            lastVisited = topNode;
+            st.pop();
+        } else {
+            curr = topNode->right;
+        }
+    }
+
+    return ans;
+}
+```
 ________________________________
 
 #### Ans 9.
