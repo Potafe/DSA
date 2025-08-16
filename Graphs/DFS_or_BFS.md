@@ -356,11 +356,16 @@ Using DFS:
 
     1.Create a corresponding visited matrix and initialize it to 0.
 
-    2. Start with boundary elements, once ‘O’ is found, call the DFS function for that element and mark it as visited. In order to traverse for boundary elements, you can traverse through the first row, last row, first column, and last column. 
+    2. Start with boundary elements, once ‘O’ is found, call the DFS function for that element 
+	and mark it as visited. In order to traverse for boundary elements, you can traverse through the first row, last row, first column, and last column. 
 
-    3. DFS function call will run through all the unvisited neighboring ‘O’s in all 4 directions and mark them as visited so that they are not converted to ‘X’ in the future. The DFS function will not be called for the already visited elements to save time, as they have already been traversed. 
+    3. DFS function call will run through all the unvisited neighboring ‘O’s in all 4 directions 
+	and mark them as visited so that they are not converted to ‘X’ in the future. 
+ 	The DFS function will not be called for the already visited elements to save time, as they have already been traversed. 
 
-    4. When all the boundaries are traversed and corresponding sets of ‘O’s are marked as visited, they cannot be replaced with ‘X’. All the other remaining unvisited ‘O’s are replaced with ‘X’. This can be done in the same input matrix as the problem talks about replacing the values, otherwise tampering with data is not advised. 
+    4. When all the boundaries are traversed and corresponding sets of ‘O’s are marked as visited, 
+	they cannot be replaced with ‘X’. All the other remaining unvisited ‘O’s are replaced with ‘X’. 
+ 	This can be done in the same input matrix as the problem talks about replacing the values, otherwise tampering with data is not advised. 
 ```cpp
 void dfs(int row, int col, vector<vector<int>> &visited,
     vector<vector<char>>& board, int delRow[], int delCol[]) {
@@ -491,19 +496,32 @@ ________________________________
 #### Ans 8.
     The Algorithm involves the following steps:
 
-    Firstly, we start by creating a queue data structure in order to store the word and the length of the sequence to reach that word as a pair. We store them in form of {word, steps}.
+    Firstly, we start by creating a queue data structure in order to store the word and 
+	the length of the sequence to reach that word as a pair. We store them in form of {word, steps}.
 
-    Then, we push the startWord into the queue with length as ‘1’ indicating that this is the word from which the sequence needs to start from.
+    Then, we push the startWord into the queue with length as ‘1’ 
+	indicating that this is the word from which the sequence needs to start from.
 
-    We now create a hash set wherein, we put all the elements in wordList to keep a check on if we’ve visited that word before or not. In order to mark a word as visited here, we simply delete the word from the hash set. There is no point in visiting someone multiple times during the algorithm.
+    We now create a hash set wherein, we put all the elements in wordList to keep a 
+	check on if we’ve visited that word before or not. In order to mark a word as visited here, 
+ 	we simply delete the word from the hash set. 
+  	There is no point in visiting someone multiple times during the algorithm.
 
-    Now, we pop the first element out of the queue and carry out the BFS traversal where, for each word popped out of the queue, we try to replace every character with ‘a’ - ‘z’, and we get a transformed word. We check if the transformed word is present in the wordList or not.
+    Now, we pop the first element out of the queue and carry out the BFS traversal where, 
+	for each word popped out of the queue, we try to replace every character with ‘a’ - ‘z’, 
+ 	and we get a transformed word. We check if the transformed word is present in the wordList or not.
 
-    If the word is present, we push it in the queue and increase the count of the sequence by 1 and if not, we simply move on to replacing the original character with the next character.
+    If the word is present, we push it in the queue and increase the count of the sequence 
+	by 1 and if not, we simply move on to replacing the original character with the next character.
 
-    Remember, we also need to delete the word from the wordList if it matches with the transformed word to ensure that we do not reach the same point again in the transformation which would only increase our sequence length.
+    Remember, we also need to delete the word from the wordList if it matches with the 
+	transformed word to ensure that we do not reach the same point again 
+ 	in the transformation which would only increase our sequence length.
 
-    Now, we pop the next element out of the queue ds and if at any point in time, the transformed word becomes the same as the targetWord, we return the count of the steps taken to reach that word. Here, we’re only concerned about the first occurrence of the targetWord because after that it would only lead to an increase in the sequence length which is for sure not minimum.
+    Now, we pop the next element out of the queue ds and if at any point in time, 
+	the transformed word becomes the same as the targetWord, we return the count of the steps taken to reach that word. 
+ 	Here, we’re only concerned about the first occurrence of the targetWord because after that 
+  	it would only lead to an increase in the sequence length which is for sure not minimum.
 
     If a transformation sequence is not possible, return 0.
 
@@ -548,21 +566,32 @@ ________________________________
 #### Ans 9.
     The Algorithm for this problem involves the following steps:
 
-    1. Firstly, we start by creating a hash set to store all the elements present in the wordList which would make the search and delete operations faster for us to implement.
+    1. Firstly, we start by creating a hash set to store all the elements present 
+	in the wordList which would make the search and delete operations faster for us to implement.
 
-    2. Next, we create a Queue data structure for storing the successive sequences/ path in the form of a vector which on transformation would lead us to the target word.
+    2. Next, we create a Queue data structure for storing the successive 
+	sequences/ path in the form of a vector which on transformation would lead us to the target word.
 
-    3. Now, we add the startWord to the queue as a List and also push it into the usedOnLevel vector to denote that this word is currently being used for transformation in this particular level.
+    3. Now, we add the startWord to the queue as a List and also push it into 
+	the usedOnLevel vector to denote that this word is currently being used for transformation in this particular level.
 
-    4. Pop the first element out of the queue and carry out the BFS traversal, where for each word that popped out from the back of the sequence present at the top of the queue, we check for all of its characters by replacing them with ‘a’ - ‘z’ if they are present in the wordList or not. In case a word is present in the wordList, we simply first push it onto the usedOnLevel vector and do not delete it from the wordList immediately.
+    4. Pop the first element out of the queue and carry out the BFS traversal, 
+	where for each word that popped out from the back of the sequence present at the top of the queue, 
+ 	we check for all of its characters by replacing them with ‘a’ - ‘z’ if they are present in the wordList or not. 
+  	In case a word is present in the wordList, we simply first push it onto the usedOnLevel vector and do not delete it from the wordList immediately.
 
-    5. Now, push that word into the vector containing the previous sequence and add it to the queue. So we will get a new path, but we need to explore other paths as well, so pop the word out of the list to explore other paths.
+    5. Now, push that word into the vector containing the previous sequence and add it to the queue. 
+	So we will get a new path, but we need to explore other paths as well, so pop the word out of the list to explore other paths.
 
-    6. After completion of traversal on a particular level, we can now delete all the words that were currently being used on that level from the usedOnLevel vector which ensures that these words won’t be used again in the future, as using them in the later stages will mean that it won’t be the shortest path anymore.
+    6. After completion of traversal on a particular level, we can now delete all the words that were 
+	currently being used on that level from the usedOnLevel vector which ensures that these words won’t 
+ 	be used again in the future, as using them in the later stages will mean that it won’t be the shortest path anymore.
 
-    7. If at any point in time we find out that the last word in the sequence present at the top of the queue is equal to the target word, we simply push the sequence into the resultant vector if the resultant vector ‘ans’ is empty.
+    7. If at any point in time we find out that the last word in the sequence present at the top of the queue 
+	is equal to the target word, we simply push the sequence into the resultant vector if the resultant vector ‘ans’ is empty.
 
-    8. If the vector is not empty, we check if the current sequence length is equal to the first element added in the ans vector or not. This has to be checked because we need the shortest possible transformation sequences.
+    8. If the vector is not empty, we check if the current sequence length is equal to the 
+	first element added in the ans vector or not. This has to be checked because we need the shortest possible transformation sequences.
 
     9. In case, there is no transformation sequence possible, we return an empty 2D vector.
 ```cpp
