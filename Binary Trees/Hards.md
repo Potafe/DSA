@@ -8,7 +8,7 @@
 
 4. [Check for Children Sum Property](#ans-4)
 
-5. Print all the Nodes at a distance of K from given node in a Binary Tree
+5. [Print all the Nodes at a distance of K from given node in a Binary Tree](#ans-5)
 
 6. [Count total Nodes in a COMPLETE Binary Tree](#ans-6)
 
@@ -188,14 +188,72 @@ ________________________________
 ```
 ________________________________
 #### Ans 5.
+    Since we have to find all the nodes at a distance k -> the question resembles a graph
+    where we can travel in all directions.
+
+    So we construct a graph from the tree using DFS.
+
+    Then we do a BFS traversal of the graph keeping the steps in mind, when the steps hit "k"
+    we push that node to ans.
+
+```cpp
+void buildGraph(TreeNode* root, unordered_map<int, vector<int>>& adj) {
+    if (!root) return;
+
+    if (root->left) {
+        adj[root->val].push_back(root->left->val);
+        adj[root->left->val].push_back(root->val);
+        buildGraph(root->left, adj);
+    }
+
+    if (root->right) {
+        adj[root->val].push_back(root->right->val);
+        adj[root->right->val].push_back(root->val);
+        buildGraph(root->right, adj);
+    }
+}
+
+vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+    unordered_map<int, vector<int>> adj;
+    buildGraph(root, adj);
+
+    int steps = 0;
+    vector<int> ans;
+
+    queue<pair<int, int>> q;
+    q.push({target->val, 0});
+    unordered_set<int> visited;
+    visited.insert(target->val);
+
+
+    while (q.size()) {
+        auto [node, step] = q.front();
+        q.pop();
+
+        if (step == k) {
+            ans.push_back(node);
+            continue;
+        }
+
+        for (auto negbors: adj[node]) {
+            if (!visited.count(negbors)) {
+                visited.insert(negbors);
+                q.push({negbors, step + 1});
+            }
+        }
+    }
+
+    return ans;
+}
+```
 ________________________________
 #### Ans 6.
-SOLUTION 1:
-    One way is to just do a BFS and then return the total size of the whole array (THIS CODE IS NOT WRITTEN)
-SOLUTION 2:
-    Check if the last level is completely filled:
-        If so, use the formula for total nodes in a perfect binary tree ie. 2^h - 1
-        If the last level is not completely filled, recursively count nodes in left and right subtrees
+    SOLUTION 1:
+        One way is to just do a BFS and then return the total size of the whole array (THIS CODE IS NOT WRITTEN)
+    SOLUTION 2:
+        Check if the last level is completely filled:
+            If so, use the formula for total nodes in a perfect binary tree ie. 2^h - 1
+            If the last level is not completely filled, recursively count nodes in left and right subtrees
 ```cpp
     int leftHeight(TreeNode* root) {
         int height = 0;

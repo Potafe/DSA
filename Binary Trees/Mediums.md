@@ -1,18 +1,18 @@
 ## Problems:
 
-1. [Height of a Binary Tree](#ans-1---do-any-traversal-return-1--maxleft-right)
+1. [Height of a Binary Tree](#ans-1)
 
-2. [Check if the Binary tree is height-balanced or not](#ans-2---check-absleft---right--1)
+2. [Check if the Binary tree is height-balanced or not](#ans-2)
 
-3. [Diameter of Binary Tree](#ans-3---calcualte-height-update-maxi--maxleft--right-maxi)
+3. [Diameter of Binary Tree](#ans-3)
 
-4. [Maximum path sum](#ans-4-calculate-maxi--root-val--left--right)
+4. [Maximum path sum](#ans-4)
 
-5. [Check if two trees are identical or not](#ans-5-traverse-at-same-time)
+5. [Check if two trees are identical or not](#ans-5)
 
 6. [Zig Zag Traversal of Binary Tree](#ans-6)
 
-7. [Vertical Order Traversal](#ans-7-vertical-order-traversal)
+7. [Vertical Order Traversal](#ans-7)
 
 8. [Top View of Binary Tree](#ans-8)
 
