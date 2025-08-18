@@ -1,0 +1,15 @@
+## Problems:
+
+1. [Ceil in a Binary Search Tree](#ans-1)
+2. [Floor in a Binary Search Tree](#ans-2)
+3. [Insert a given Node in Binary Search Tree](#ans-3)
+4. [Delete a Node in Binary Search Tree](#ans-4)
+5. [Find K-th smallest/largest element in BST](#ans-5)
+6. [Check if a tree is a BST or BT](#ans-6)
+7. [LCA in Binary Search Tree](#ans-7)
+8. [Construct a BST from a preorder traversal](#ans-8)
+9. [Inorder Successor/Predecessor in BST](#ans-9)
+10. [Merge 2 BST's](#ans-10)
+11. [Two Sum In BST | Check if there exists a pair with Sum K](#ans-11)
+12. [Recover BST | Correct BST with two nodes swapped](#ans-12)
+13. [Largest BST in Binary Tree](#ans-13)
