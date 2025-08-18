@@ -41,6 +41,7 @@
     }
 ```
 ________________________________
+
 #### Ans 2. 
     -> check abs(left - right) == 1
 ```cpp
@@ -62,6 +63,7 @@ ________________________________
     }
 ```
 ________________________________
+
 #### Ans 3. 
     -> calcualte height, update maxi = max(left + right, maxi)
 
@@ -85,6 +87,7 @@ ________________________________
     }
 ```
 ________________________________
+
 #### Ans 4. 
     calculate maxi = root->val + left + right
 ```cpp
@@ -108,8 +111,9 @@ ________________________________
     }
 ```
 ________________________________
+
 #### Ans 5.
-     Traverse at same time 
+    Traverse at same time 
 
 ```cpp
     bool isSameTree(p, q) {
@@ -121,6 +125,7 @@ ________________________________
     }
 ```
 ________________________________
+
 #### Ans 6. 
     Do level order, keep a flag which turns off after every for loop iteration ends, add element to level vector by logic :  
 
@@ -164,6 +169,8 @@ ________________________________
     }
 ```
 ________________________________
+
+
 #### Ans 7.  
     Has a little fucked up solution to it, requires me to memorize somethings, namely:
         
@@ -244,6 +251,7 @@ vector<vector<int>> verticalTraversal(TreeNode* root) {
 }
 ```
 ________________________________
+
 #### Ans 8.
     Idea is simple store the level and the node in a map, since its top view, dont update the node value in map if another node of same val is found
 ```cpp
@@ -284,6 +292,7 @@ ________________________________
     }
 ```
 _______________________________
+
 #### Ans 9.
     This time just update the value of the node upon reaching a level visited before.
 ```cpp
@@ -410,6 +419,7 @@ ________________________________
 
 ```
 ________________________________
+
 #### Ans 11. 
     Check if BT is mirror image, by doing traversal on the root's left and right child
 ```cpp
@@ -478,10 +488,11 @@ Solution 1:
         return res;    
     }
 ```
-Solution 2: 
-    1. Just travel recursively both the right and left along with the level.
-    2. Mantain a ans array which checks if it's size == level:
-        a. If it is then ans.push(root->val)
+    Solution 2: 
+        1. Just travel recursively both the right and left along with the level.
+        2. Mantain a ans array which checks if it's size == level:
+            a. If it is then ans.push(root->val)
+
 ```cpp
     void recurseRight(TreeNode* root, vector<int> ans, int level) {
         if root == NULL -> return

@@ -12,16 +12,15 @@
 
 6. [Count total Nodes in a COMPLETE Binary Tree](#ans-6)
 
-7. Minimum time taken to BURN the Binary Tree from a Node
+7. [Minimum time taken to BURN the Binary Tree from a Node](#ans-7)
 
-8. Construct Binary Tree from inorder and preorder
+8. [Construct Binary Tree from inorder and preorder](#ans-8)
 
-9. Construct the Binary Tree from Postorder and Inorder 
-Traversal
+9. [Construct the Binary Tree from Postorder and Inorder Traversal](#ans-9)
 
-10. Serialize and deserialize Binary Tree
+10. [Serialize and deserialize Binary Tree](#ans-10)
 
-11. Flatten Binary Tree to LinkedList
+11. [Flatten Binary Tree to LinkedList](#ans-11)
 
 ## Solutions: 
 
@@ -91,11 +90,14 @@ vector<int> Root_to_Given_Node_Path(TreeNode* A, int B) {
     }
 ```
 ________________________________
-#### Ans 2.
-The Lowest Common Ancestor of two nodes p and q in a binary tree is the lowest node in the tree that has both p and q as descendants.
-A node can be a descendant of itself.
 
-Remember we have to return the lowest common ANCESTOR of the 2 nodes (it cant be the one in the middle).
+#### Ans 2.
+    The Lowest Common Ancestor of two nodes p and q in a binary tree is 
+    the lowest node in the tree that has both p and q as descendants.
+    
+    A node can be a descendant of itself.
+
+    Remember we have to return the lowest common ANCESTOR of the 2 nodes (it cant be the one in the middle).
 
     Clever solution, maine nahi socha tha yeh:
 
@@ -123,6 +125,7 @@ Remember we have to return the lowest common ANCESTOR of the 2 nodes (it cant be
     }
 ```
 ________________________________
+
 #### Ans 3.
     We do a level order traversal and assign each node the correct level according to rule:
         left = (2 * current_level + 1)
@@ -163,6 +166,7 @@ int widthOfBinaryTree(TreeNode* root) {
 }
 ```
 ________________________________
+
 #### Ans 4.
     Recurse over left and right:
         1. Check and calculate the left and right.
@@ -187,6 +191,7 @@ ________________________________
     }
 ```
 ________________________________
+
 #### Ans 5.
     Since we have to find all the nodes at a distance k -> the question resembles a graph
     where we can travel in all directions.
@@ -247,6 +252,7 @@ vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
 }
 ```
 ________________________________
+
 #### Ans 6.
     SOLUTION 1:
         One way is to just do a BFS and then return the total size of the whole array (THIS CODE IS NOT WRITTEN)
@@ -291,3 +297,309 @@ ________________________________
     }
 ```
 ________________________________
+
+
+#### Ans 7.
+    Since there is a start node -> most probably we will have to do both backward and forward
+    traversals, so just make a graph first.
+
+    Now what we do is do a BFS traversal while keeping in mind the time.
+
+    Each time we process the queue -> we increment the time.
+
+```cpp
+void genGraph(TreeNode* root, unordered_map<int, vector<int>> &adjLs) {
+    if (!root) return;
+
+    if (root->left) {
+        adjLs[root->data].push_back(root->left->data);
+        adjLs[root->left->data].push_back(root->data);
+        genGraph(root->left, adjLs);
+    }
+
+    if (root->right) {
+        adjLs[root->data].push_back(root->right->data);
+        adjLs[root->right->data].push_back(root->data);
+        genGraph(root->right, adjLs);
+    }
+}
+
+int timeToBurnTree(TreeNode* root, int start){
+    unordered_map<int, vector<int>> adjLs;
+    genGraph(root, adjLs);
+
+    unordered_map<int, bool> visited;
+    queue<int> q;
+    q.push(start);
+    visited[start] = true;
+    
+    int time = -1;
+    while (!q.empty()) {
+        int size = q.size();
+        time++;
+        for (int i = 0; i < size; ++i) {
+            int node = q.front(); 
+            q.pop();
+            
+            for (int neighbor : adjLs[node]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+    }
+    
+    return time;
+}	
+```
+________________________________
+
+#### Ans 8.
+    We have the preorder array to get the roots and the inorder 
+    array to get the connections (ie left and right)
+
+    What we do is basically this:
+
+    1. Make the root node from the preorder array
+    2. Get the root node's location in inorder array
+    3. Make the left and right inorder and preorder array 
+        a. left inorder will be from begin to root node location
+        b. left preorder will be from preorder begin to left inorder size
+
+        c. right inorder will be from root node location to end of inorder array
+        d. right preorder will be from left inorder end to end of preorder array
+
+            Example:
+            
+            preorder = [3,9,20,15,7], 
+            inorder = [9,3,15,20,7]
+
+            root = 20
+            left_inorder = [9, 3, 15]
+            left_preorder = [9, 20, 15]
+
+            right_inorder = [7]
+            right_preorder = []
+
+            Now we easily can get the left and right connections 
+
+
+```cpp
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    if (preorder.empty() || inorder.empty()) return nullptr;
+
+    TreeNode* root = new TreeNode(preorder[0]);
+
+    // now we find the location of this root->val in inorder array
+    // to construct the left and right preorder and inorder arrays
+    int rootIndex = 0;
+    for (int i = 0; i < inorder.size(); i++) {
+        if (inorder[i] == root->val) {
+            rootIndex = i;
+            break;
+        }
+    }
+
+    vector<int> leftInorder(inorder.begin(), inorder.begin() + rootIndex);
+    vector<int> leftPreorder(preorder.begin() + 1, preorder.begin() + 1 + leftInorder.size());
+    // this gives us the root->left's preorder and inorder
+    
+    vector<int> rightPreorder(preorder.begin() + 1 + leftInorder.size(), preorder.end());
+    vector<int> rightInorder(inorder.begin() + rootIndex + 1, inorder.end());
+    // this gives us the root->right's preorder and inorder
+
+    root->left = buildTree(leftPreorder, leftInorder);
+    root->right = buildTree(rightPreorder, rightInorder);
+
+
+    return root;
+}	
+```
+________________________________
+
+#### Ans 9.
+    We have the postorder array to get the roots and the inorder 
+    array to get the connections (ie left and right)
+
+    What we do is basically this:
+
+    1. Make the root node from the postorder array
+    2. Get the root node's location in inorder array
+    3. Make the left and right inorder and postorder array 
+        a. left inorder will be from begin to root node location
+        b. left postorder will be from postorder begin to rootIndex
+
+        c. right inorder will be from root node location to end of inorder array
+        d. right postorder will be from rootIndex to second last element of postorder array
+
+            Example:
+            
+            postorder = [3,9,20,15,7], 
+            inorder = [9,3,15,20,7]
+
+            root = 20
+            left_inorder = [9, 3, 15]
+            left_postorder = [9, 20, 15]
+
+            right_inorder = [7]
+            right_postorder = []
+
+            Now we easily can get the left and right connections 
+
+
+```cpp
+TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+    if (postorder.empty() || inorder.empty()) return nullptr;
+
+    TreeNode* root = new TreeNode(postorder[postorder.size() - 1]);
+
+    // now we find the location of this root->val in inorder array
+    // to construct the left and right postorder and inorder arrays
+    int rootIndex = 0;
+    for (int i = 0; i < inorder.size(); i++) {
+        if (inorder[i] == root->val) {
+            rootIndex = i;
+            break;
+        }
+    }
+
+    vector<int> leftInorder(inorder.begin(), inorder.begin() + rootIndex);
+    vector<int> leftPostorder(postorder.begin(), postorder.begin() + rootIndex);
+    // this gives us the root->left's postorder and inorder
+    
+    vector<int> rightInorder(inorder.begin() + rootIndex + 1, inorder.end());
+    vector<int> rightPostorder(postorder.begin() + rootIndex, postorder.end() - 1);
+    // this gives us the root->right's postorder and inorder
+
+    root->left = buildTree(leftInorder, leftPostorder);
+    root->right = buildTree(rightInorder, rightPostorder);
+
+
+    return root;        
+}
+```
+________________________________
+
+#### Ans 10.
+    The question is basically BT construction from a level order array
+
+    What we basically do is:
+
+    1. Push to queue the root which is array[0]
+    2. Now we traverse the array from index i = 1
+    3. pop the current node in queue
+    4. node->left = array[index], q.push(node->left), i++
+    5. node->right = array[index], q.push(node->right), i++
+
+```cpp
+class Codec {
+public:
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (!root) return "null";
+        
+        string ans;
+        
+        queue<TreeNode*> q;
+        q.push(root);
+
+        while (q.size()) {
+            int size = q.size();
+            
+            for (int i = 0; i < size; i++) {
+                TreeNode* node = q.front();
+                q.pop();
+
+                if (node) {
+                    ans.append(to_string(node->val) + ",");
+                    q.push(node->left);
+                    q.push(node->right);
+                }
+
+                else ans.append("null,");     
+            }
+        }
+
+        return ans;
+    }
+
+    vector<string> split(const string& data) {
+        vector<string> result;
+        string temp;
+        for (char ch : data) {
+            if (ch == ',') {
+                if (!temp.empty()) result.push_back(temp);
+                temp.clear();
+            } else if (ch != ' ' && ch != '"') {
+                temp += ch;
+            }
+        }
+        if (!temp.empty()) result.push_back(temp);
+        return result;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        vector<string> nodes = split(data);
+        if (nodes.empty() || nodes[0] == "null") return nullptr;
+
+        TreeNode* root = new TreeNode(stoi(nodes[0]));
+        queue<TreeNode*> q;
+        q.push(root);
+
+        int i = 1;
+        while (i < nodes.size()) {
+            TreeNode* current = q.front();
+            q.pop();
+
+            if (i < nodes.size() && nodes[i] != "null") {
+                current->left = new TreeNode(stoi(nodes[i]));
+                q.push(current->left);
+            }
+            i++;
+
+            if (i < nodes.size() && nodes[i] != "null") {
+                current->right = new TreeNode(stoi(nodes[i]));
+                q.push(current->right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+};
+```
+________________________________
+
+#### Ans 11.
+    COMPLETE NON INTUTIVE (FOR ME AT FIRST):
+
+    1. We recursively traverse the left and right tree
+    2. We set the left part of root as NULL
+    3. We set the right part of root as the root's left
+    4. We set the right part of the above left (root's left) as the original right of the root
+
+```cpp
+void flatten(TreeNode* root) {
+    if (!root) return;
+
+    flatten(root->left);
+    flatten(root->right);
+
+    TreeNode* left = root->left;
+    TreeNode* right = root->right;
+
+    root->left = NULL;
+    root->right = left;
+
+    TreeNode* curr = root;
+    while (curr->right) {
+        curr = curr->right;
+    }
+    curr->right = right;    
+}
+```
+________________________________
+
