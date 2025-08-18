@@ -226,7 +226,7 @@ bool isCyclic(int V, vector<vector<int>> &edges) {
 ________________________________
 #### Ans 4.
     This question is easy: if we detect a cycle: just return false:
-- Using DFS:
+    - Using DFS:
 ```cpp
 bool dfs(int i, vector<int> &visited, 
 vector<int> &pathVisited, vector<vector<int>> &adjLs) {
@@ -267,7 +267,7 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 }
 
 ```
-- Using Kahn's Algo (BFS topo sort, cycle detection)
+    - Using Kahn's Algo (BFS topo sort, cycle detection)
 ```cpp
 bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
     vector<vector<int>> adjLs(numCourses);
@@ -315,7 +315,7 @@ ________________________________
 #### Ans 5.
     All we have to do is find all the nodes which are part of the cycle.
 
-- Using DFS
+    - Using DFS:
 ```cpp
 bool dfs(int i, vector<int> &visited,
 vector<int> &pathVisited, vector<vector<int>> &adjLs
@@ -352,15 +352,15 @@ vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
 }
 ```
 
-- Using BFS
+    - Using BFS
 
-    All we have to do in this case is:
+        All we have to do in this case is:
 
-    1. Create a reverse graph (Destination -> Source)
-    2. Have an outdegree array 
-    3. Use Kahn's algo for traversing the reverse graph and marking
-        safe nodes (using safe array)
-    4. At last push all safe nodes to the ans.
+        1. Create a reverse graph (Destination -> Source)
+        2. Have an outdegree array 
+        3. Use Kahn's algo for traversing the reverse graph and marking
+            safe nodes (using safe array)
+        4. At last push all safe nodes to the ans.
 
 ```cpp
 vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
