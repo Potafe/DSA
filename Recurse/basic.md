@@ -138,7 +138,7 @@ As we can see above the time complexity of the above is O(n^2) as the popped ele
 
 ```cpp
 
-int sort_stack(stack<int> &s) {
+void sort_stack(stack<int> &s) {
     if (s.empty()) return;
 
     int top_el = s.top();
@@ -168,7 +168,38 @@ void insert_stack(stack<int> &s, int el) {
 
 #### Ans 5.
 
-```
+This question is also solved using recursion, basically:
+
+1. In the previous question we were recursing and check the condition if the current_el > s.top():
+   -> and then inserting the element.
+
+2. Now we just insert the element.
+
+```cpp
+void reverse_stack(stack<int> &s) {
+    if (s.empty()) return;
+
+    int top_el = s.top();
+    s.pop();
+
+    reverse_stack(s);
+
+    insert_stack(s, top_el);
+}
+
+void insert_stack(stack<int> &s, int el) {
+    if (s.empty()) {
+        s.push(el);
+        return;
+    }
+
+    int temp_el = s.top();
+    s.pop();
+
+    insert_stack(s, el);
+
+    s.push(temp_el);
+}
 
 ```
 
