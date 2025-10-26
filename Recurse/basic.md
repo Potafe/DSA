@@ -127,14 +127,14 @@ int pow(int x, int n) {
 
 ---
 
+#### Ans 4.
+
 To sort a stack using recursion we do the following:
 
 1. Define a sort method -> that pops the element from the stack, recursively sorts the remaining stack and calls the insert_stack method to place the popped element in order.
 2. Now we define the insert_stack method that recursively pops the element from the stack and puts them back into their right position.
 
 As we can see above the time complexity of the above is O(n^2) as the popped element might need to traverse the entire stack to get inserted into the correct position.
-
-#### Ans 4.
 
 ```cpp
 
