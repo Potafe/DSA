@@ -70,6 +70,7 @@ void recursion(vector<int> &ans, string x, int n, int open, int closed) {
 If we want to generate all binary strings all we have to is use the above algo again in a different way now.
 
 -> Here we will have to choose to pick either a '1' or '0' while keeping the size of string as n.
+
 -> For the base case we check if the ones and zeros are total of size n.
 
 ```cpp
@@ -151,6 +152,7 @@ vector<vector<int>> subsets(vector<int>& nums) {
 We just have to check if there exists a subsequences with sum k:
 
 -> The brute force recursive way is to generate all the subsequences with the sum == k
+
 -> If they exist in our final vector<vector> we return true.
 
 -> The more optimal solution is a DP one which we will discuss later.
@@ -182,6 +184,7 @@ bool checkSubsequenceSum(vector<int> nums, int k) {
 #### Ans 5.
 
 -> Not going to solve this one as this is a similar version of the above question.
+
 -> In this case we just return the size of the ans array.
 
 ---
@@ -191,10 +194,15 @@ bool checkSubsequenceSum(vector<int> nums, int k) {
 We have to return subsequences that sum up to a particular target.
 
 -> The logic remains the same -> we either pick a number or skip that number.
+
 -> In this case we can pick the number more than once if needed (the needed case being -> if num < target)
+
 -> So we will write it in this way:
+
 -> Base Case: if index > n and target == 0 -> push copy to ans and return
+
 -> Pick Case: while num < target -> we pick num and recurse on the same index
+
 -> Not Pick Case: skip the current num and pick the num from next index
 
 ```cpp
