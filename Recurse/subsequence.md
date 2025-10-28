@@ -235,13 +235,126 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
 
 #### Ans 7.
 
+We basically have to now return the ans array from above question, but in this case the subsequences should be unique.
+
+1. So we first sort the array.
+
+2. Now we call our recursion function:
+   - The base case of the recursion function is basically if target_sum == 0 -> we push copy to ans and return
+   - Now we loop from each index and in this loop we call the recursion function again for the index after that:
+     - In the loop we first check if the previous_index and the current_index values are not equal.
+     - We also check if the current_value is not greater than the target_sum.
+     - We then push current_value to the copy.
+     - We now call the recursion function for the next index.
+
+```cpp
+
+void recursion(int index, vector<int> nums, int target, vector<vector<int>>& ans, vector<int>& copy) {
+    if (target == 0) {
+        ans.push_back(copy);
+        return;
+    }
+
+    for (int i = index; i < n; i++) {
+        if (i > index && nums[i] == nums[i - 1]) continue;
+
+        if (nums[i] > target) break;
+
+        copy.push_back(nums[i]);
+
+        recursion(i + 1, nums, target, ans, copy);
+
+        copy.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum2(vector<int>& nums, int target) {
+    sort(nums.begin(), nums.end());
+
+    vector<vector<int>> ans;
+    vector<int> copy;
+
+    solve(0, nums, target, ans, copy);
+    return ans;
+}
+
+```
+
 ---
 
 #### Ans 8.
 
+Simple recursion question:
+
+1. We either pick a number and add it our sum.
+2. Or we don't pick that number (skip it) and move on to our next index.
+
+```cpp
+void recursion(vector<int> &ans, vector<int>& arr, int index, int sum) {
+    if (index >= arr.size()) {
+        ans.push_back(sum);
+        return;
+    }
+
+    //pick
+    sum += arr[index];
+    recursion(ans, arr, index + 1, sum);
+    sum -= arr[index];
+
+    //not pick
+    recursion(ans, arr, index + 1, sum);
+}
+
+vector<int> subsetSums(vector<int>& arr) {
+    vector<int> ans;
+
+    recursion(ans, arr, 0, 0);
+
+    return ans;
+}
+
+```
+
 ---
 
 #### Ans 9.
+
+Now we have to return all the "UNIQUE" subsets of the nums array.
+
+1. We can basically do what we did in our combinationSum2 question:
+   - We define our recursion which basically has a loop from the current_index to the end of the nums array:
+     - This loop will work exactly like it did in the combinationSum2 question.
+   - The base case is we push the copy to the ans array.
+
+```cpp
+
+void recursion(vector<vector<int>> &ans, vector<int> arr, int index, vector<int> &copy) {
+    ans.push_back(copy);
+
+    for (int i = index; i < arr.size(); i++) {
+        if (i != index && arr[i] == arr[i - 1]) continue;
+
+        copy.push_back(arr[i]);
+
+        recursion(ans, arr, i + 1, copy);
+
+        copy.pop_back();
+    }
+}
+
+vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+
+    vector<vector<int>> ans;
+    vector<int> copy;
+
+    recursion(ans, nums, 0, copy);
+
+
+    return ans;
+}
+
+```
 
 ---
 
