@@ -360,8 +360,116 @@ vector<vector<int>> subsetsWithDup(vector<int>& nums) {
 
 #### Ans 10.
 
+The question is simple, the only complication they have provided this time is:
+
+-> Provided no nums array.
+
+-> Provided a specific size of the subsets.
+
+Algo:
+
+1. We first construct a nums array (for numbers -> 1 to 9 (as given in the question)).
+2. Second in our base case we ensure that the size of the copy array == k.
+
+```cpp
+
+void recurse(vector<vector<int>> &ans, vector<int> &copy, vector<int> nums, int index, int k, int target) {
+    if (index >= k && target == 0 && copy.size() == k) {
+        ans.push_back(copy);
+        return;
+    }
+
+    for (int i = index; i < nums.size(); i++) {
+        if (nums[i] > target) continue;
+        copy.push_back(nums[i]);
+        recurse(ans, copy, nums, i + 1, k, target - nums[i]);
+        copy.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum3(int k, int n) {
+    vector<int> nums(10);
+
+    for (int i = 0; i < 10; i++) {
+        nums[i] = i;
+    }
+
+    vector<vector<int>> ans;
+    vector<int> copy;
+
+    recurse(ans, copy, nums, 1, k, n);
+
+    return ans;
+}
+
+```
+
 ---
 
 #### Ans 11.
+
+Like above the question follows the same recursion principle of generating all subsequencs, but with a twist added in the question, namely:
+
+1. We are given a map of strings with some numbers.
+
+Algo used to solve:
+
+1. We define base case if our index is out of bonds we push our copy string to ans and return
+2. Now we take one string from our array and loop and the next string to generate all possible subsequences.
+
+Below is the code for a better understanding:
+
+```cpp
+
+void recurse(vector<string> &ans, vector<string> &all_chars, string digits, string copy, int index) {
+    if (index >= all_chars.size()) {
+        ans.push_back(copy);
+        return;
+    }
+
+    // we take the current string.
+    string str = all_chars[index];
+
+
+    // we loop through it's and the next string's chars to generate our subsequences.
+    for (int i = 0; i < str.size(); i++) {
+        copy.push_back(str[i]);
+        recurse(ans, all_chars, digits, copy, index + 1);
+        copy.pop_back();
+    }
+}
+
+vector<string> letterCombinations(string digits) {
+    vector<string> all(10);
+
+    // below we define the map bw the numbers and the strings.
+    all[2] = "abc";
+    all[3] = "def";
+    all[4] = "ghi";
+    all[5] = "jkl";
+    all[6] = "mno";
+    all[7] = "pqrs";
+    all[8] = "tuv";
+    all[9] = "wxyz";
+
+    vector<string> all_chars;
+    vector<string> ans;
+
+
+    // now we push all the strings present in the
+    // digits string into our all_chars array.
+    for (char c: digits) {
+        int index = c - '0';
+        string word = all[index];
+        all_chars.push_back(word);
+    }
+
+    // do recursion
+    recurse(ans, all_chars, digits, "", 0);
+
+    return ans;
+}
+
+```
 
 ---
